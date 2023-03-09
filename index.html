@@ -120,6 +120,7 @@
         isPlayerMovable = true
         counterPiece = 0
         hitS = 0
+        estKnockBack=false;
 
         function create() {
 
@@ -802,8 +803,9 @@
 
             //modification de couleur pour montrer dégats
             if (vieModifiee) {
+                
                 this.player.setTint(0xff0000);
-
+                this.player.setVelocityY(-(this.player.body.velocity.y))
 
                 setTimeout(() => {
                     this.player.setTint();
@@ -813,13 +815,13 @@
             }
 
 
-            //touches de controle
+            //touches de controlex
 
-            if (cursors.left.isDown) { //si la touche gauche est appuyée
+            if (cursors.left.isDown && !estKnockBack) { //si la touche gauche est appuyée
                 this.player.setVelocityX(-160); //alors vitesse négative en X
                 this.player.anims.play('left', true); //et animation => gauche
             }
-            else if (cursors.right.isDown) { //sinon si la touche droite est appuyée
+            else if (cursors.right.isDown && !estKnockBack) { //sinon si la touche droite est appuyée
                 this.player.setVelocityX(160); //alors vitesse positive en X
                 this.player.anims.play('right', true); //et animation => droite
 
@@ -830,12 +832,12 @@
             }
 
 
-            if (cursors.up.isDown) { //sinon si la touche droite est appuyée
+            if (cursors.up.isDown && !estKnockBack) { //sinon si la touche droite est appuyée
                 this.player.setVelocityY(-160); //alors vitesse positive en X
                 this.player.anims.play('right', true); //et animation => droite
 
             }
-            else if (cursors.down.isDown) { //sinon si la touche droite est appuyée
+            else if (cursors.down.isDown && !estKnockBack) { //sinon si la touche droite est appuyée
                 this.player.setVelocityY(160); //alors vitesse positive en X
                 this.player.anims.play('right', true); //et animation => droite
 
