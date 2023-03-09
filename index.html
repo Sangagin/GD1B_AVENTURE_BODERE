@@ -1,0 +1,1044 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Mon 1er jeu Phaser</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js">
+    </script>
+    <link rel="stylesheet">
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+
+
+<body>
+
+
+
+
+
+    <script type="text/javascript">
+
+
+
+
+
+
+
+
+
+        var config = {
+            type: Phaser.AUTO,
+            // width: 1600, height: 1600,
+            width: 600, height: 500,
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 300 },
+                    debug: false
+                }
+            },
+            input: { gamepad: true },
+            pixelArt: true,
+
+            scene: { preload: preload, create: create, update: update }
+
+
+
+        };
+
+        game = new Phaser.Game(config);
+
+        function preload() {
+            this.load.spritesheet('perso', 'assets/perso.png',
+                { frameWidth: 32, frameHeight: 62 });
+            this.load.spritesheet('piece', 'assets/piece.png',
+                { frameWidth: 200, frameHeight: 200 });
+            this.load.image('fond', 'assets/background_2.png')
+            this.load.image("Phaser_tileset", "assets/tilesetOrdonne.png");
+            this.load.image("text1", "assets/texte1.png");
+            this.load.image("text2", "assets/texte2.png");
+            this.load.image("text3", "assets/texte3.png");
+            this.load.image("textG", "assets/texteG.png");
+            this.load.image("textV", "assets/texteV.png");
+            this.load.image("textI", "assets/texteI.png");
+            this.load.image("pics1", "assets/pics1.png");
+            this.load.image("pics1_bas", "assets/pics1_bas.png");
+            this.load.image("pics1_droite", "assets/pics1_droite.png");
+            this.load.image("pics1_gauche", "assets/pics1_gauche.png");
+            this.load.image("pics2", "assets/pics2.png");
+            this.load.image("pics2_bas", "assets/pics2_bas.png");
+            this.load.image("pics2_droite", "assets/pics2_droite.png");
+            this.load.image("pics2_gauche", "assets/pics2_gauche.png");
+            this.load.image("pics3", "assets/pics3.png");
+            this.load.image("pics3_bas", "assets/pics3_bas.png");
+            this.load.image("pics3_droite", "assets/pics3_droite.png");
+            this.load.image("pics3_gauche", "assets/pics3_gauche.png");
+            this.load.image("ui", "assets/UI.png");
+            this.load.image("redbar", "assets/redbar.png");
+            this.load.image("serpent", "assets/serpent.png");
+            this.load.image("fouet", "assets/icone_fouet.png");
+            this.load.tilemapTiledJSON("carte", "assets/map.json");
+
+
+
+
+
+        }
+
+
+
+
+        var cursors;
+        var gameOver;
+        var counter = 0;
+        var player;
+        gameOver = false;
+        this.sens = 1;
+        wallJump = true;
+        vieModifiee = false; //sert a rajouter des frames d'invincibilité et d'actualiser la barre de vie
+        vie = 10;
+        ennemiVivant = true;
+        ennemiVivant2 = true;
+        powerup1 = false;
+        powerup2 = false;
+        powerup3 = false;
+        add1 = false;
+        add2 = false;
+        add3 = false;
+        isPlayerMovable = true
+        counterPiece = 0
+        hitS = 0
+
+        function create() {
+
+
+            background = this.add.image(800, 800, 'fond');
+            const carteDuNiveau = this.add.tilemap("carte");
+
+            const tileset = carteDuNiveau.addTilesetImage(
+                "tileset",
+                "Phaser_tileset"
+            );
+
+
+
+            const calque_plateformes = carteDuNiveau.createLayer(
+                "plateformes",
+                tileset
+            );
+
+            //il s'appelle calque pic mais c'est surtout celui avec la lave
+            const calque_pics1 = carteDuNiveau.createLayer(
+                "pic1",
+                tileset
+            );
+
+            const calque_pics2 = carteDuNiveau.createLayer(
+                "pic2",
+                tileset
+            );
+
+
+            const calque_pics3 = carteDuNiveau.createLayer(
+                "pic3",
+                tileset
+            );
+
+            const calque_deco = carteDuNiveau.createLayer(
+                "décos",
+                tileset
+            );
+
+
+
+            calque_plateformes.setCollisionByProperty({ EstSolide: true });
+            //calque_pics1.setCollisionByProperty({ EstLave: true });
+
+
+
+
+            //activation manette
+            this.input.gamepad.once('connected', function (pad) {
+                controller = pad;
+            });
+
+
+
+
+
+
+            // 
+            //ça fonctionne, a rajouter image de barre de vie
+
+            this.player = this.physics.add.sprite(400, 860, 'perso');
+            this.player.setBounce(0.2);
+            this.player.setScale(0.8);
+            this.player.setCollideWorldBounds(true);
+            this.physics.add.collider(this.player, calque_plateformes);
+            this.physics.add.collider(this.player, calque_pics1, hitS);
+
+
+
+
+
+            //affichage UI 
+            ui = this.add.image(this.player.x - 128 - 110, 62, 'ui')
+            ui.setScrollFactor(0);
+            ui.setScale(0.35);
+            ui.depth = 2;
+
+            redbar = this.add.image(this.player.x - 350, 36, 'redbar')
+            redbar.setScrollFactor(0);
+            redbar.depth = 1
+
+            //ajout des pieces
+
+            this.piece1 = this.physics.add.sprite(335, 1020, 'piece');
+            this.piece1.body.allowGravity = false;
+            this.physics.add.collider(this.player, this.piece1, playerHitPiece1);
+            this.physics.add.collider(this.piece1, calque_plateformes);
+            this.piece1.setScale(0.15);
+
+
+
+            this.piece2 = this.physics.add.sprite(112 + 64 + 32, 654 + 32, 'piece');
+            this.piece2.body.allowGravity = false;
+            this.physics.add.collider(this.player, this.piece2, playerHitPiece2);
+            this.physics.add.collider(this.piece2, calque_plateformes);
+            this.piece2.setScale(0.15);
+
+
+            this.piece3 = this.physics.add.sprite(1010, 680, 'piece');
+            this.piece3.body.allowGravity = false;
+            this.physics.add.collider(this.player, this.piece3, playerHitPiece3);
+            this.physics.add.collider(this.piece3, calque_plateformes);
+            this.piece3.setScale(0.15);
+
+
+            //test boites de message
+
+            texte1 = this.add.image(this.piece1.x - 2, this.piece1.y + 5, 'text1')
+            texte1.depth = 5
+
+            texte1.visible = false;
+
+            texte2 = this.add.image(this.piece2.x - 2, this.piece2.y + 5, 'text2')
+            texte2.depth = 3
+            texte2.visible = false;
+
+            texte3 = this.add.image(this.piece3.x - 2, this.piece3.y + 5, 'text3')
+            texte3.depth = 3
+
+            texte3.visible = false;
+
+
+            texteG = this.add.image(this.piece1.x - 2, this.piece1.y + 5, 'textG')
+            texteG.visible = false;
+
+            texteV = this.add.image(this.piece1.x - 2, this.piece1.y + 5, 'textV')
+            texteV.visible = false;
+
+            texteI = this.add.image(this.player.x-5, this.player.y+5, 'textI')
+            texteI.immovable = true;
+            texteI.depth = 9999;
+            isPlayerMovable = false;
+
+            setTimeout(() => {
+                texteI.visible = false;
+                isPlayerMovable = true;
+            }, 7000);
+
+
+            comptPiece = this.add.text(this.player.x - 250 - 75, 60, '0', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif', fontSize: 45 });
+            comptPiece.depth = 4
+            comptPiece.setScrollFactor(0);
+
+
+            //affichage des pics de niveau 1
+            {
+                this.spike1_1 = this.physics.add.sprite(592, 1264, 'pics1');
+                this.spike1_2 = this.physics.add.sprite(464, 1520, 'pics1');
+                this.spike1_3 = this.physics.add.sprite(496, 1520, 'pics1');
+                this.spike1_4 = this.physics.add.sprite(176, 1264, 'pics1');
+                this.spike1_5 = this.physics.add.sprite(144, 1264, 'pics1');
+                this.spike1_6 = this.physics.add.sprite(1136, 1520 - 64, 'pics1');
+                this.spike1_7 = this.physics.add.sprite(1136 + 32, 1520 - 64, 'pics1');
+                this.spike1_8 = this.physics.add.sprite(1424, 1520 - 64, 'pics1');
+                this.spike1_9 = this.physics.add.sprite(1424 + 96, 912, 'pics1');
+                this.spike1_10 = this.physics.add.sprite(1424 - 32, 658, 'pics1');
+                this.spike1_11 = this.physics.add.sprite(176 + 64, 1264 + 64, 'pics1_bas');
+                this.spike1_12 = this.physics.add.sprite(176 + 96, 1264 + 64, 'pics1_bas');
+                this.spike1_13 = this.physics.add.sprite(176 + 64, 975, 'pics1_bas');
+                this.spike1_14 = this.physics.add.sprite(1136 - 32, 1264 + 64, 'pics1_bas');
+                this.spike1_15 = this.physics.add.sprite(1136 - 64, 1264 + 64, 'pics1_bas');
+                this.spike1_16 = this.physics.add.sprite(1424 + 96, 976 + 32, 'pics1_bas');
+                this.spike1_17 = this.physics.add.sprite(1424 + 64, 976 + 32, 'pics1_bas');
+                this.spike1_18 = this.physics.add.sprite(1424 + 96, 976 - 96 - 64, 'pics1_bas');
+                this.spike1_19 = this.physics.add.sprite(1424 + 64, 976 - 96 - 64, 'pics1_bas');
+                this.spike1_20 = this.physics.add.sprite(1424 + 32, 976 - 96 - 64, 'pics1_bas');
+                this.spike1_21 = this.physics.add.sprite(1424 + 64, 1520 - 128, 'pics1_gauche');
+                this.spike1_22 = this.physics.add.sprite(1424 + 64, 1520 - 128 - 32, 'pics1_gauche');
+                this.spike1_23 = this.physics.add.sprite(1424 + 64, 1520 - 128 - 64, 'pics1_gauche');
+                this.spike1_24 = this.physics.add.sprite(1424 + 64, 1520 - 128 - 96, 'pics1_gauche');
+
+                this.spike1_1.body.allowGravity = false;
+                this.spike1_2.body.allowGravity = false;
+                this.spike1_3.body.allowGravity = false;
+                this.spike1_4.body.allowGravity = false;
+                this.spike1_5.body.allowGravity = false;
+                this.spike1_6.body.allowGravity = false;
+                this.spike1_7.body.allowGravity = false;
+                this.spike1_8.body.allowGravity = false;
+                this.spike1_9.body.allowGravity = false;
+                this.spike1_10.body.allowGravity = false;
+                this.spike1_11.body.allowGravity = false;
+                this.spike1_12.body.allowGravity = false;
+                this.spike1_13.body.allowGravity = false;
+                this.spike1_14.body.allowGravity = false;
+                this.spike1_15.body.allowGravity = false;
+                this.spike1_16.body.allowGravity = false;
+                this.spike1_17.body.allowGravity = false;
+                this.spike1_18.body.allowGravity = false;
+                this.spike1_19.body.allowGravity = false;
+                this.spike1_20.body.allowGravity = false;
+                this.spike1_21.body.allowGravity = false;
+                this.spike1_22.body.allowGravity = false;
+                this.spike1_23.body.allowGravity = false;
+                this.spike1_24.body.allowGravity = false;
+
+                this.spike1_1.body.immovable = true;
+                this.spike1_2.body.immovable = true;
+                this.spike1_3.body.immovable = true;
+                this.spike1_4.body.immovable = true;
+                this.spike1_5.body.immovable = true;
+                this.spike1_6.body.immovable = true;
+                this.spike1_7.body.immovable = true;
+                this.spike1_8.body.immovable = true;
+                this.spike1_9.body.immovable = true;
+                this.spike1_10.body.immovable = true;
+                this.spike1_11.body.immovable = true;
+                this.spike1_12.body.immovable = true;
+                this.spike1_13.body.immovable = true;
+                this.spike1_14.body.immovable = true;
+                this.spike1_15.body.immovable = true;
+                this.spike1_16.body.immovable = true;
+                this.spike1_17.body.immovable = true;
+                this.spike1_18.body.immovable = true;
+                this.spike1_19.body.immovable = true;
+                this.spike1_20.body.immovable = true;
+                this.spike1_21.body.immovable = true;
+                this.spike1_22.body.immovable = true;
+                this.spike1_23.body.immovable = true;
+                this.spike1_24.body.immovable = true;
+
+
+                this.physics.add.collider(this.player, this.spike1_1, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_2, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_3, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_4, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_5, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_6, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_7, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_8, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_9, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_10, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_11, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_12, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_13, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_14, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_15, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_16, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_17, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_18, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_19, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_20, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_21, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_22, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_23, playerHit1);
+                this.physics.add.collider(this.player, this.spike1_24, playerHit1);
+            }
+            //affichage des pics de niveau 2
+            {
+
+                this.spike2_1 = this.physics.add.sprite(1136 - 96, 208, 'pics2');
+                this.spike2_2 = this.physics.add.sprite(592, 208 + 128, 'pics2');
+                this.spike2_3 = this.physics.add.sprite(592 + 32, 208 + 128, 'pics2');
+                this.spike2_4 = this.physics.add.sprite(592 - 320 + 64, 208 + 64, 'pics2');
+                //this.spike2_5 = this.physics.add.sprite(592 - 320 + 64 + 64, 208 + 64, 'pics2_gauche');
+                this.spike2_6 = this.physics.add.sprite(592 + 96, 208 - 32, 'pics2_gauche');
+                this.spike2_7 = this.physics.add.sprite(592 + 96, 208 - 64, 'pics2_gauche');
+                //  this.spike2_8 = this.physics.add.sprite(1136, 208 - 64 - 64, 'pics2_gauche');
+                this.spike2_9 = this.physics.add.sprite(1136 - 32, 208 + 32, 'pics2_droite');
+                this.spike2_10 = this.physics.add.sprite(1136 - 128 - 96, 208 + 32, 'pics2_droite');
+                this.spike2_11 = this.physics.add.sprite(592, 208, 'pics2_droite');
+                this.spike2_12 = this.physics.add.sprite(592, 208 - 32, 'pics2_droite');
+                this.spike2_13 = this.physics.add.sprite(592, 208 - 64, 'pics2_droite');
+                this.spike2_14 = this.physics.add.sprite(1136 + 96 + 32, 208 + 128 + 128 + 32, 'pics2_droite');
+                this.spike2_15 = this.physics.add.sprite(1136 + 96 + 32, 208 + 128 + 128 + 32 + 32, 'pics2_droite');
+                this.spike2_16 = this.physics.add.sprite(1136 + 96 + 32, 208 + 128 + 128 + 32 + 64, 'pics2_droite');
+
+
+                this.spike2_1.body.allowGravity = false;
+                this.spike2_2.body.allowGravity = false;
+                this.spike2_3.body.allowGravity = false;
+                this.spike2_4.body.allowGravity = false;
+                //  this.spike2_5.body.allowGravity = false;
+                this.spike2_6.body.allowGravity = false;
+                this.spike2_7.body.allowGravity = false;
+                //this.spike2_8.body.allowGravity = false;
+                this.spike2_9.body.allowGravity = false;
+                this.spike2_10.body.allowGravity = false;
+                this.spike2_11.body.allowGravity = false;
+                this.spike2_12.body.allowGravity = false;
+                this.spike2_13.body.allowGravity = false;
+                this.spike2_14.body.allowGravity = false;
+                this.spike2_15.body.allowGravity = false;
+                this.spike2_16.body.allowGravity = false;
+
+                this.spike2_1.body.immovable = true;
+                this.spike2_2.body.immovable = true;
+                this.spike2_3.body.immovable = true;
+                this.spike2_4.body.immovable = true;
+                //   this.spike2_5.body.immovable = true;
+                this.spike2_6.body.immovable = true;
+                this.spike2_7.body.immovable = true;
+                // this.spike2_8.body.immovable = true;
+                this.spike2_9.body.immovable = true;
+                this.spike2_10.body.immovable = true;
+                this.spike2_11.body.immovable = true;
+                this.spike2_12.body.immovable = true;
+                this.spike2_13.body.immovable = true;
+                this.spike2_14.body.immovable = true;
+                this.spike2_15.body.immovable = true;
+                this.spike2_16.body.immovable = true;
+
+
+                this.physics.add.collider(this.player, this.spike2_1, playerHit2);
+                this.physics.add.collider(this.player, this.spike2_2, playerHit2);
+                this.physics.add.collider(this.player, this.spike2_3, playerHit2);
+                this.physics.add.collider(this.player, this.spike2_4, playerHit2);
+                // this.physics.add.collider(this.player, this.spike2_5, playerHit2);
+                this.physics.add.collider(this.player, this.spike2_6, playerHit2);
+                this.physics.add.collider(this.player, this.spike2_7, playerHit2);
+                //  this.physics.add.collider(this.player, this.spike2_8, playerHit1);
+                this.physics.add.collider(this.player, this.spike2_9, playerHit2);
+                this.physics.add.collider(this.player, this.spike2_10, playerHit2);
+                this.physics.add.collider(this.player, this.spike2_11, playerHit2);
+                this.physics.add.collider(this.player, this.spike2_12, playerHit2);
+                this.physics.add.collider(this.player, this.spike2_13, playerHit2);
+                this.physics.add.collider(this.player, this.spike2_14, playerHit2);
+                this.physics.add.collider(this.player, this.spike2_15, playerHit2);
+                this.physics.add.collider(this.player, this.spike2_16, playerHit2);
+
+
+
+            }
+
+            //affichage des pics de niveau 3
+
+            {
+
+                this.spike3_1 = this.physics.add.sprite(1136 - 96, 208 + 128 + 64, 'pics3_bas');
+                this.spike3_2 = this.physics.add.sprite(1136 - 96 - 32, 208 + 128 + 64, 'pics3_bas');
+                this.spike3_3 = this.physics.add.sprite(1136 - 96 - 32 - 32, 208 + 128 + 64, 'pics3_bas');
+                this.spike3_4 = this.physics.add.sprite(816, 208 + 128 + 96, 'pics3_bas');
+                this.spike3_5 = this.physics.add.sprite(816 - 32, 208 + 128 + 96, 'pics3_bas');
+                this.spike3_6 = this.physics.add.sprite(816 - 64, 208 + 128 + 96, 'pics3_bas');
+                this.spike3_7 = this.physics.add.sprite(816 - 96, 208 + 128 + 96, 'pics3_bas');
+                this.spike3_8 = this.physics.add.sprite(816 - 128, 208 + 128 + 96, 'pics3_bas');
+                this.spike3_9 = this.physics.add.sprite(816 - 160, 208 + 128 + 96, 'pics3_bas');
+                this.spike3_10 = this.physics.add.sprite(816 - 192, 208 + 128 + 96, 'pics3_bas');
+                this.spike3_11 = this.physics.add.sprite(816 - 192 - 32, 208 + 128 + 96, 'pics3_bas');
+                // this.spike3_12 = this.physics.add.sprite(816 - 192 - 64, 208 + 128 + 96, 'pics3_bas');
+                this.spike3_13 = this.physics.add.sprite(812 - 192 - 32 - 124 - 32, 208 + 128 + 96, 'pics3_bas');
+                //this.spike3_14 = this.physics.add.sprite(812-192-64-124-32, 208 + 128 +96, 'pics3_bas');
+                this.spike3_15 = this.physics.add.sprite(1136 - 96, 208 + 128 + 96, 'pics3_gauche');
+                this.spike3_16 = this.physics.add.sprite(1136 - 96, 208 + 128 + 96 + 32, 'pics3_gauche');
+                this.spike3_17 = this.physics.add.sprite(1136 - 96, 208 + 128 + 96 + 64, 'pics3_gauche');
+                this.spike3_18 = this.physics.add.sprite(1136 - 96, 208 + 128 + 96 + 32 + 64, 'pics3_gauche');
+                this.spike3_19 = this.physics.add.sprite(1136 - 96, 208 + 128 + 96 + 128, 'pics3_gauche');
+                this.spike3_20 = this.physics.add.sprite(1136 - 96, 208 + 128 + 96 + 32 + 128, 'pics3_gauche');
+                this.spike3_21 = this.physics.add.sprite(1136 - 96, 208 + 128 + 96 + 64 + 128, 'pics3_gauche');
+                this.spike3_22 = this.physics.add.sprite(1136 - 96, 208 + 128 + 96 + 32 + 64 + 128, 'pics3_gauche');
+                this.spike3_23 = this.physics.add.sprite(1136 - 96 - 64, 208 + 128 + 96 + 32 + 128, 'pics3_droite');
+                this.spike3_24 = this.physics.add.sprite(1136 - 96 - 64, 208 + 128 + 96 + 64 + 128, 'pics3_droite');
+                this.spike3_25 = this.physics.add.sprite(1136 - 96 - 64, 208 + 128 + 96 + 32 + 64 + 128, 'pics3_droite');
+                this.spike3_26 = this.physics.add.sprite(1136 - 96 - 64, 208 + 128 + 96 + 128 + 128, 'pics3_droite');
+
+
+
+                this.spike3_1.body.allowGravity = false;
+                this.spike3_2.body.allowGravity = false;
+                this.spike3_3.body.allowGravity = false;
+                this.spike3_4.body.allowGravity = false;
+                this.spike3_5.body.allowGravity = false;
+                this.spike3_6.body.allowGravity = false;
+                this.spike3_7.body.allowGravity = false;
+                this.spike3_8.body.allowGravity = false;
+                this.spike3_9.body.allowGravity = false;
+                this.spike3_10.body.allowGravity = false;
+                this.spike3_11.body.allowGravity = false;
+                //this.spike3_12.body.allowGravity = false;
+                this.spike3_13.body.allowGravity = false;
+                // this.spike3_14.body.allowGravity = false;
+                this.spike3_15.body.allowGravity = false;
+                this.spike3_16.body.allowGravity = false;
+                this.spike3_17.body.allowGravity = false;
+                this.spike3_18.body.allowGravity = false;
+                this.spike3_19.body.allowGravity = false;
+                this.spike3_20.body.allowGravity = false;
+                this.spike3_21.body.allowGravity = false;
+                this.spike3_22.body.allowGravity = false;
+                this.spike3_23.body.allowGravity = false;
+                this.spike3_24.body.allowGravity = false;
+                this.spike3_25.body.allowGravity = false;
+                this.spike3_26.body.allowGravity = false;
+
+                this.spike3_1.body.immovable = true;
+                this.spike3_2.body.immovable = true;
+                this.spike3_3.body.immovable = true;
+                this.spike3_4.body.immovable = true;
+                this.spike3_5.body.immovable = true;
+                this.spike3_6.body.immovable = true;
+                this.spike3_7.body.immovable = true;
+                this.spike3_8.body.immovable = true;
+                this.spike3_9.body.immovable = true;
+                this.spike3_10.body.immovable = true;
+                this.spike3_11.body.immovable = true;
+                //   this.spike3_12.body.immovable = true;
+                this.spike3_13.body.immovable = true;
+                // this.spike3_14.body.immovable = true;
+                this.spike3_15.body.immovable = true;
+                this.spike3_16.body.immovable = true;
+                this.spike3_17.body.immovable = true;
+                this.spike3_18.body.immovable = true;
+                this.spike3_19.body.immovable = true;
+                this.spike3_20.body.immovable = true;
+                this.spike3_21.body.immovable = true;
+                this.spike3_22.body.immovable = true;
+                this.spike3_23.body.immovable = true;
+                this.spike3_24.body.immovable = true;
+                this.spike3_25.body.immovable = true;
+                this.spike3_26.body.immovable = true;
+
+                this.physics.add.collider(this.player, this.spike3_1, playerHit3);
+                this.physics.add.collider(this.player, this.spike3_2, playerHit3);
+                this.physics.add.collider(this.player, this.spike3_3, playerHit3);
+                this.physics.add.collider(this.player, this.spike3_4, playerHit3);
+                this.physics.add.collider(this.player, this.spike3_5, playerHit3);
+                this.physics.add.collider(this.player, this.spike3_6, playerHit3);
+                this.physics.add.collider(this.player, this.spike3_7, playerHit3);
+                this.physics.add.collider(this.player, this.spike3_8, playerHit3);
+                this.physics.add.collider(this.player, this.spike3_9, playerHit3);
+                this.physics.add.collider(this.player, this.spike3_10, playerHit3);
+                this.physics.add.collider(this.player, this.spike3_11, playerHit3);
+                //   this.physics.add.collider(this.player, this.spike3_12, playerHit3);
+                this.physics.add.collider(this.player, this.spike3_13, playerHit3);
+                //   this.physics.add.collider(this.player, this.spike3_14, playerHit1);
+                this.physics.add.collider(this.player, this.spike3_15, playerHit3);
+                this.physics.add.collider(this.player, this.spike3_16, playerHit3);
+                this.physics.add.collider(this.player, this.spike3_17, playerHit3);
+                this.physics.add.collider(this.player, this.spike3_18, playerHit3);
+                this.physics.add.collider(this.player, this.spike3_19, playerHit3);
+                this.physics.add.collider(this.player, this.spike3_20, playerHit3);
+                this.physics.add.collider(this.player, this.spike3_21, playerHit3);
+                this.physics.add.collider(this.player, this.spike3_22, playerHit3);
+                this.physics.add.collider(this.player, this.spike3_23, playerHit3);
+                this.physics.add.collider(this.player, this.spike3_24, playerHit3);
+                this.physics.add.collider(this.player, this.spike3_25, playerHit3);
+                this.physics.add.collider(this.player, this.spike3_26, playerHit3);
+            }
+
+            //manque les pics de coté
+
+            //affichage de l'ennemi mobile
+
+            this.serpent = this.physics.add.sprite(700, 1200, 'serpent');
+
+            this.physics.add.collider(this.serpent, calque_plateformes);
+            this.serpent.setScale(0.04);
+            this.serpent.setVelocityX(50);
+
+            this.physics.add.collider(this.player, this.serpent, playerHitS);
+
+
+            this.serpent2 = this.physics.add.sprite(200, 10, 'serpent');
+
+            this.physics.add.collider(this.serpent2, calque_plateformes);
+            this.serpent2.setScale(0.04);
+            this.serpent2.setVelocityX(50);
+
+            this.physics.add.collider(this.player, this.serpent2, playerHitS);
+
+
+
+
+            //affichage des tirs (le perso ne sait pas se servir d'un fouet donc elle le lance)
+            this.fouet = this.physics.add.sprite(32, 8, 'fouet');
+            this.physics.add.collider(this.serpent, this.fouet, destroySerpent);
+            this.physics.add.collider(this.serpent2, this.fouet, destroySerpent2);
+
+            this.fouet.setScale(0.1);
+            this.fouet.body.allowGravity = false;
+            this.fouet.setVelocityX(150);
+            this.fouet.setActive(false)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // redimentionnement du monde avec les dimensions calculées via tiled
+            this.physics.world.setBounds(0, 0, 1600, 1600);
+            //  ajout du champs de la caméra de taille identique à celle du monde
+            this.cameras.main.setBounds(0, 0, 1600, 1600);
+            // ancrage de la caméra sur le joueur
+            this.cameras.main.startFollow(this.player);
+
+
+            this.onWallDroit = false;
+            this.onWallGauche = false;
+            this.canJump = true;
+
+            this.anims.create({
+                key: 'left',
+                frames: this.anims.generateFrameNumbers('perso', { start: 0, end: 3 }),
+                frameRate: 10,
+                repeat: -1
+            });
+            this.anims.create({
+                key: 'turn',
+                frames: [{ key: 'perso', frame: 4 }],
+                frameRate: 20
+            });
+            this.anims.create({
+                key: 'right',
+                frames: this.anims.generateFrameNumbers('perso', { start: 5, end: 8 }),
+                frameRate: 10,
+                repeat: -1
+            });
+
+
+
+            //anim pieces
+            this.anims.create({
+                key: 'rota',
+                frames: this.anims.generateFrameNumbers('piece', { start: 0, end: 3 }),
+                frameRate: 5,
+                repeat: -1
+            });
+
+
+
+            cursors = this.input.keyboard.createCursorKeys();
+
+
+        }
+
+
+
+
+
+        walljump = false;
+
+        function update() {
+
+            //rotation des pièces
+
+            this.piece1.anims.play('rota', true);
+            this.piece2.anims.play('rota', true);
+            this.piece3.anims.play('rota', true);
+
+            //destruction des pieces quand recup
+            if (powerup1) {
+
+                this.piece1.setActive(false).setVisible(false);
+                if (!add1) {
+                    add1 = true
+                    counterPiece++
+
+                }
+
+            }
+            if (powerup2) {
+                this.piece2.setActive(false).setVisible(false);
+                if (!add2) {
+                    add2 = true
+                    counterPiece++
+
+                }
+            }
+            if (powerup3) {
+                this.piece3.setActive(false).setVisible(false);
+                if (!add3) {
+                    add3 = true
+                    counterPiece++
+
+                }
+            }
+
+
+            //update du compteur de pièces
+            comptPiece.setText(counterPiece)
+
+
+            //déplacements des ennemis qui bougent
+            if (ennemiVivant) {
+                if (this.serpent.body.blocked.left) {
+                    this.serpent.setVelocityX(50);
+                    console.log("bong")
+
+                }
+
+                if (this.serpent.body.blocked.right) {
+                    this.serpent.setVelocityX(-50);
+                    console.log("bing");
+                }
+            } else {
+                this.serpent.setActive(false).setVisible(false);
+                this.serpent.destroy();
+
+            }
+            if (ennemiVivant2) {
+                if (this.serpent2.body.blocked.left) {
+                    this.serpent2.setVelocityX(50);
+
+                }
+
+                if (this.serpent2.body.blocked.right) {
+                    this.serpent2.setVelocityX(-50);
+                }
+            } else {
+                this.serpent2.setActive(false).setVisible(false);
+                this.serpent2.destroy();
+
+            }
+
+
+
+            //affichage message game over 
+            if (gameOver) {
+                texteG.visible = true;
+                texteG.immovable = true;
+                texteG.x = this.player.x;
+                texteG.y = this.player.y;
+                texteG.depth = 9999;
+
+                return;
+            }
+
+            //affichage message victoire
+            if (powerup1 && powerup2 && powerup3) {
+                texteV.visible = true;
+                texteV.immovable = true;
+                texteV.x = this.player.x;
+                texteV.y = this.player.y;
+                texteV.depth = 9999;
+
+                return;
+            }
+
+
+
+
+            //lancement du fouet
+            if (powerup1) {
+                this.input.on('pointerdown', (pointer) => {
+                    this.fouet.setActive(true)
+                    this.fouet.x = this.player.x
+                    this.fouet.y = this.player.y
+                    if (pointer.x < 300) {
+
+                        this.fouet.setVelocityX(-150)
+
+                    }
+                    else {
+                        this.fouet.setVelocityX(150)
+
+                    }
+                });
+            }
+
+            //anim du fouet
+            this.fouet.setAngle(this.fouet.x)
+
+
+            //modification de couleur pour montrer dégats
+            if(vieModifiee){
+                this.player.setTint(0xff0000);
+                setTimeout(() => {
+                    this.player.setTint();
+                }, 300);
+
+            }
+            
+
+            //touches de controle
+
+            if (cursors.left.isDown && !this.onWallGauche && !walljump && isPlayerMovable) { //si la touche gauche est appuyée
+
+                this.player.setVelocityX(-160); //alors vitesse négative en X
+                this.player.anims.play('left', true); //et animation => gauche
+
+
+            }
+
+            else if (this.onWallGauche && cursors.up.isDown && isPlayerMovable) {
+                walljump = true;
+                this.player.setVelocityY(-170);
+                this.player.setVelocityX(100); //alors vitesse positive en X
+                this.player.anims.play('right', true);
+                this.onWallGauche = false;
+                setTimeout(() => {
+                    walljump = false;
+                }, 300);
+
+
+            }
+
+            else if (cursors.right.isDown && !this.onWallDroit && !walljump && isPlayerMovable) { //sinon si la touche droite est appuyée
+                this.player.setVelocityX(160); //alors vitesse positive en X
+                this.player.anims.play('right', true); //et animation => droite
+
+            }
+
+
+            else if (this.onWallDroit && cursors.up.isDown && isPlayerMovable) {
+                walljump = true;
+                this.player.setVelocityY(-170);
+                this.player.setVelocityX(-100); //alors vitesse positive en X
+                this.player.anims.play('left', true);
+                this.onWallDroit = false;
+                setTimeout(() => {
+                    walljump = false;
+                }, 300);
+
+
+            }
+
+            else if (!walljump && isPlayerMovable) { // sinon
+                this.player.setVelocityX(0); //vitesse nulle
+                this.player.anims.play('turn'); //animation fait face caméra
+            }
+            setTimeout(() => {
+                this.onWall = false;
+
+            }, 3000);
+
+
+
+            if (cursors.up.isDown && this.player.body.blocked.down && isPlayerMovable) {
+                //si touche haut appuyée ET que le perso touche le sol
+                this.player.setVelocityY(-170); //alors vitesse verticale négative
+
+
+
+
+                // hero can't jump anymore
+                this.canJump = false;
+
+                // hero is not on the wall anymore
+                this.onWallDroit = false;
+                this.onWallGauche = false;
+
+
+
+
+            }
+
+            if (cursors.down.isDown && !this.player.body.touching.down && isPlayerMovable) { //si la touche bas est appuyée en saut
+                this.player.setVelocityY(450);
+            }
+
+            if (this.player.body.blocked.down && isPlayerMovable) {
+
+                // hero can jump
+                this.canJump = true;
+
+                // hero not on the wall
+                this.onWallDroit = false;
+                this.onWallGauche = false;
+            }
+
+
+
+            if (this.player.body.blocked.right && !this.player.body.blocked.down && isPlayerMovable) {
+
+                this.onWallDroit = true;
+            }
+
+
+
+            if (this.player.body.blocked.left && !this.player.body.blocked.down && isPlayerMovable) {
+                this.onWallGauche = true;
+
+            }
+
+
+        }
+
+
+
+        function playerHit1() {
+            if (!vieModifiee) {
+                vie--
+                console.log(vie)
+                degat=true;
+                redbar.x = redbar.x - 21;
+
+                if (vie <= 0) {
+                    console.log("mort")
+
+
+                    gameOver = true;
+                }
+
+
+                //inserer anim frames invincibilité
+                vieModifiee = true;
+                setTimeout(() => {
+                    vieModifiee = false;
+                }, 1000);
+            }
+
+        }
+
+
+        function playerHit2() {
+            if (!vieModifiee) {
+                vie = vie - 2
+                console.log(vie)
+
+                redbar.x = redbar.x - 42;
+
+                if (vie <= 0) {
+                    console.log("mort")
+
+
+                    gameOver = true;
+                }
+
+
+                //inserer anim frames invincibilité
+                vieModifiee = true;
+                setTimeout(() => {
+                    vieModifiee = false;
+
+                }, 1000);
+            }
+
+        }
+
+        function playerHit3() {
+            if (!vieModifiee) {
+                vie = vie - 3
+                console.log(vie)
+
+                redbar.x = redbar.x - 63;
+
+                if (vie <= 0) {
+                    console.log("mort")
+
+
+                    gameOver = true;
+                }
+
+
+                //inserer anim frames invincibilité
+                vieModifiee = true;
+                setTimeout(() => {
+                    vieModifiee = false;
+                }, 1000);
+            }
+
+        }
+
+        function playerHitS() {
+            if (!vieModifiee) {
+                vie = vie - 10
+                console.log(vie)
+                gameOver = true;
+
+
+
+
+            }
+
+        }
+
+
+        function playerHitPiece1() {
+            texte1.visible = true;
+            isPlayerMovable = false;
+            powerup1 = true
+            setTimeout(() => {
+                texte1.visible = false;
+                isPlayerMovable = true;
+
+            }, 5000);
+
+
+        }
+
+        function playerHitPiece2() {
+            powerup2 = true
+            return
+            setTimeout(() => {
+                texte2.visible = false;
+                isPlayerMovable = true;
+            }, 5000);
+
+
+        }
+
+        function playerHitPiece3() {
+            //    texte3.visible = true;
+            powerup3 = true
+
+
+        }
+
+
+        function destroySerpent() {
+            ennemiVivant = false
+
+
+
+
+        }
+
+
+        function destroySerpent2() {
+            ennemiVivant2 = false
+
+
+
+
+        }
+
+
+
+
+
+    </script>
+    <div id="myProgress">
+        <div id="myBar" style="color:blue;text-align:center;"></div>
+    </div>
+
+</body>
+
+</html>
