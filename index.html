@@ -38,7 +38,7 @@
             physics: {
                 default: 'arcade',
                 arcade: {
-                    gravity: { y: 300 },
+                    gravity: false,
                     debug: false
                 }
             },
@@ -50,6 +50,13 @@
 
 
         };
+
+
+        let keyA;
+        let keyZ;
+        let keyE;
+        let keyR;
+
 
         game = new Phaser.Game(config);
 
@@ -243,7 +250,7 @@
             texteV = this.add.image(this.piece1.x - 2, this.piece1.y + 5, 'textV')
             texteV.visible = false;
 
-            texteI = this.add.image(this.player.x-5, this.player.y+5, 'textI')
+            texteI = this.add.image(this.player.x - 5, this.player.y + 5, 'textI')
             texteI.immovable = true;
             texteI.depth = 9999;
             isPlayerMovable = false;
@@ -554,7 +561,6 @@
                 this.physics.add.collider(this.player, this.spike3_26, playerHit3);
             }
 
-            //manque les pics de coté
 
             //affichage de l'ennemi mobile
 
@@ -647,6 +653,17 @@
             cursors = this.input.keyboard.createCursorKeys();
 
 
+
+
+            keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+            keyZ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+            keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+            keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+
+
+
+
+
         }
 
 
@@ -656,6 +673,12 @@
         walljump = false;
 
         function update() {
+
+
+            if (keyA.isDown) {
+                console.log('A key pressed')
+            }
+
 
             //rotation des pièces
 
@@ -730,6 +753,9 @@
 
 
 
+
+            //passer ça en scènes
+
             //affichage message game over 
             if (gameOver) {
                 texteG.visible = true;
@@ -756,136 +782,67 @@
 
 
             //lancement du fouet
-            if (powerup1) {
-                this.input.on('pointerdown', (pointer) => {
-                    this.fouet.setActive(true)
-                    this.fouet.x = this.player.x
-                    this.fouet.y = this.player.y
-                    if (pointer.x < 300) {
+            if (keyA.isDown) {
+                this.fouet.setActive(true)
+                this.fouet.x = this.player.x
+                this.fouet.y = this.player.y
+                this.fouet.setVelocityX(-150)
 
-                        this.fouet.setVelocityX(-150)
-
-                    }
-                    else {
-                        this.fouet.setVelocityX(150)
-
-                    }
-                });
+                ;
             }
+
+
+            //touches pouvoirs azer
+
+
 
             //anim du fouet
             this.fouet.setAngle(this.fouet.x)
 
 
             //modification de couleur pour montrer dégats
-            if(vieModifiee){
+            if (vieModifiee) {
                 this.player.setTint(0xff0000);
+
+
                 setTimeout(() => {
                     this.player.setTint();
+
                 }, 300);
 
             }
-            
+
 
             //touches de controle
 
-            if (cursors.left.isDown && !this.onWallGauche && !walljump && isPlayerMovable) { //si la touche gauche est appuyée
-
+            if (cursors.left.isDown) { //si la touche gauche est appuyée
                 this.player.setVelocityX(-160); //alors vitesse négative en X
                 this.player.anims.play('left', true); //et animation => gauche
-
-
             }
-
-            else if (this.onWallGauche && cursors.up.isDown && isPlayerMovable) {
-                walljump = true;
-                this.player.setVelocityY(-170);
-                this.player.setVelocityX(100); //alors vitesse positive en X
-                this.player.anims.play('right', true);
-                this.onWallGauche = false;
-                setTimeout(() => {
-                    walljump = false;
-                }, 300);
-
-
-            }
-
-            else if (cursors.right.isDown && !this.onWallDroit && !walljump && isPlayerMovable) { //sinon si la touche droite est appuyée
+            else if (cursors.right.isDown) { //sinon si la touche droite est appuyée
                 this.player.setVelocityX(160); //alors vitesse positive en X
                 this.player.anims.play('right', true); //et animation => droite
 
             }
-
-
-            else if (this.onWallDroit && cursors.up.isDown && isPlayerMovable) {
-                walljump = true;
-                this.player.setVelocityY(-170);
-                this.player.setVelocityX(-100); //alors vitesse positive en X
-                this.player.anims.play('left', true);
-                this.onWallDroit = false;
-                setTimeout(() => {
-                    walljump = false;
-                }, 300);
-
-
-            }
-
-            else if (!walljump && isPlayerMovable) { // sinon
+            else { // sinon
                 this.player.setVelocityX(0); //vitesse nulle
                 this.player.anims.play('turn'); //animation fait face caméra
             }
-            setTimeout(() => {
-                this.onWall = false;
-
-            }, 3000);
 
 
-
-            if (cursors.up.isDown && this.player.body.blocked.down && isPlayerMovable) {
-                //si touche haut appuyée ET que le perso touche le sol
-                this.player.setVelocityY(-170); //alors vitesse verticale négative
-
-
-
-
-                // hero can't jump anymore
-                this.canJump = false;
-
-                // hero is not on the wall anymore
-                this.onWallDroit = false;
-                this.onWallGauche = false;
-
-
-
+            if (cursors.up.isDown) { //sinon si la touche droite est appuyée
+                this.player.setVelocityY(-160); //alors vitesse positive en X
+                this.player.anims.play('right', true); //et animation => droite
 
             }
+            else if (cursors.down.isDown) { //sinon si la touche droite est appuyée
+                this.player.setVelocityY(160); //alors vitesse positive en X
+                this.player.anims.play('right', true); //et animation => droite
 
-            if (cursors.down.isDown && !this.player.body.touching.down && isPlayerMovable) { //si la touche bas est appuyée en saut
-                this.player.setVelocityY(450);
             }
-
-            if (this.player.body.blocked.down && isPlayerMovable) {
-
-                // hero can jump
-                this.canJump = true;
-
-                // hero not on the wall
-                this.onWallDroit = false;
-                this.onWallGauche = false;
-            }
-
-
-
-            if (this.player.body.blocked.right && !this.player.body.blocked.down && isPlayerMovable) {
-
-                this.onWallDroit = true;
-            }
-
-
-
-            if (this.player.body.blocked.left && !this.player.body.blocked.down && isPlayerMovable) {
-                this.onWallGauche = true;
-
+            else { // sinon
+                this.player.setVelocityY(0); //vitesse nulle
+                this.player.anims.play('turn'); //animation fait face caméra
             }
 
 
@@ -897,7 +854,7 @@
             if (!vieModifiee) {
                 vie--
                 console.log(vie)
-                degat=true;
+                degat = true;
                 redbar.x = redbar.x - 21;
 
                 if (vie <= 0) {
