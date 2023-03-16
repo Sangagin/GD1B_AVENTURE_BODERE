@@ -39,7 +39,7 @@
                 default: 'arcade',
                 arcade: {
                     gravity: false,
-                    debug: false
+                    debug: true
                 }
             },
             input: { gamepad: true },
@@ -120,9 +120,9 @@
         isPlayerMovable = true
         counterPiece = 0
         hitS = 0
-        estKnockBack=false;
+        estKnockBack = false;
 
-        lastFacingDirection="right";
+        lastFacingDirection = "right";
 
 
 
@@ -257,17 +257,17 @@
 
             texteV = this.add.image(this.piece1.x - 2, this.piece1.y + 5, 'textV')
             texteV.visible = false;
-/*
-            texteI = this.add.image(this.player.x - 5, this.player.y + 5, 'textI')
-            texteI.immovable = true;
-            texteI.depth = 9999;
-            isPlayerMovable = false;
-
-            setTimeout(() => {
-                texteI.visible = false;
-                isPlayerMovable = true;
-            }, 7000);
-*/
+            /*
+                        texteI = this.add.image(this.player.x - 5, this.player.y + 5, 'textI')
+                        texteI.immovable = true;
+                        texteI.depth = 9999;
+                        isPlayerMovable = false;
+            
+                        setTimeout(() => {
+                            texteI.visible = false;
+                            isPlayerMovable = true;
+                        }, 7000);
+            */
             comptPiece = this.add.text(this.player.x - 250 - 75, 60, '0', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif', fontSize: 45 });
             comptPiece.depth = 4
             comptPiece.setScrollFactor(0);
@@ -575,7 +575,7 @@
 
             this.physics.add.collider(this.serpent, calque_plateformes);
             this.serpent.setScale(0.04);
-            this.serpent.setVelocityX(50);
+            //this.serpent.setVelocityX(50);
 
             this.physics.add.collider(this.player, this.serpent, playerHitS);
 
@@ -598,19 +598,19 @@
 
             this.fouet.setScale(0.1);
             this.fouet.body.allowGravity = false;
-     //       this.fouet.setVelocityX(150);
+            //       this.fouet.setVelocityX(150);
             this.fouet.setActive(false)
 
 
             this.crabe = this.physics.add.sprite(32, 8, 'fouet');
-            this.crabe.width=1000
-            this.crabe.displayWidth=1000;
+            this.crabe.width = 1000
+            this.crabe.displayWidth = 1000;
             this.physics.add.collider(this.serpent, this.crabe, destroySerpent);
             this.physics.add.collider(this.serpent2, this.crabe, destroySerpent2);
 
             this.crabe.setScale(0.1);
             this.crabe.body.allowGravity = false;
-     //       this.fouet.setVelocityX(150);
+            //       this.fouet.setVelocityX(150);
             this.crabe.setActive(false)
 
 
@@ -676,8 +676,38 @@
             keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
 
+            graphics = this.add.graphics();
 
 
+
+            path = new Phaser.Curves.Path(this.player.x+90, this.player.y-90);
+
+            path.splineTo([500, 800, 274, 542, 412, 457, 522, 541, 664, 464]);
+
+
+
+           // graphics.lineStyle(2, 0xffffff, 1);
+
+
+            path.draw(graphics);
+
+
+           // this.bob = this.physics.add.sprite(700, 1200, 'serpent');
+            this.bob = this.add.follower(path, this.player.x+90, this.player.y-90);
+            this.bob.setScale(0.1);
+
+
+            this.bob.startFollow({
+                duration: 10000,
+                yoyo: true,
+                repeat: -1,
+                rotateToPath: true,
+                verticalAdjust: true
+                
+            });
+
+
+            this.physics.add.collider(this.player, this.bob, destroySerpent);
 
         }
 
@@ -690,28 +720,37 @@
         function update() {
 
 
+
+
+            
+            this.serpent.x=this.bob.x
+            this.serpent.y=this.bob.y
+
+
+
+
+
             //attaque épée
             if (keyA.isDown) {
                 this.fouet.y = this.player.y
-
                 console.log('A key pressed')
                 this.fouet.setActive(true)
-                if (lastFacingDirection=="right"){
-                    this.fouet.x = this.player.x+30
+                if (lastFacingDirection == "right") {
+                    this.fouet.x = this.player.x + 30
                 }
-                else if(lastFacingDirection=="left"){
-                    this.fouet.x = this.player.x-30
+                else if (lastFacingDirection == "left") {
+                    this.fouet.x = this.player.x - 30
                 }
-                else if(lastFacingDirection=="up"){
+                else if (lastFacingDirection == "up") {
                     this.fouet.x = this.player.x
-                    this.fouet.y = this.player.y-40
+                    this.fouet.y = this.player.y - 40
                     this.fouet.setAngle(90)
 
                 }
-                else if(lastFacingDirection=="down"){
+                else if (lastFacingDirection == "down") {
                     console.log("down")
                     this.fouet.x = this.player.x
-                    this.fouet.y = this.player.y+45
+                    this.fouet.y = this.player.y + 45
 
                     this.fouet.setAngle(90)
 
@@ -725,39 +764,40 @@
             }
 
 
-            if (keyE.isDown){
+            if (keyE.isDown) {
                 this.crabe.y = this.player.y
                 console.log('E key pressed')
-                this.crabe.width=1000
+                this.crabe.width = 1000
                 this.crabe.setActive(true)
-                if (lastFacingDirection=="right"){
+                if (lastFacingDirection == "right") {
                     this.crabe.setAngle(0)
-                    this.crabe.x = this.player.x+60
+                    this.crabe.x = this.player.x + 60
                 }
-                else if(lastFacingDirection=="left"){
-                    this.crabe.x = this.player.x-60
+                else if (lastFacingDirection == "left") {
+                    this.crabe.x = this.player.x - 60
                     this.crabe.setAngle(0)
 
                 }
-                else if(lastFacingDirection=="up"){
+                else if (lastFacingDirection == "up") {
                     this.crabe.x = this.player.x
-                    this.crabe.y = this.player.y-65
+                    this.crabe.y = this.player.y - 65
+                    this.crabe.setAngle(90)
+                    this.crabe.setSize(10,10)
+
+                }
+                else if (lastFacingDirection == "down") {
+                    this.crabe.x = this.player.x
+                    this.crabe.y = this.player.y + 70
+
                     this.crabe.setAngle(90)
 
                 }
-                else if(lastFacingDirection=="down"){
-                    this.crabe.x = this.player.x
-                    this.crabe.y = this.player.y+70
 
-                    this.crabe.setAngle(90)
-
-                }
-                
-                this.crabe.displayWidth=100;
+                this.crabe.displayWidth = 100;
 
                 setTimeout(() => {
                     this.crabe.x = 0;
-                    this.crabe.y=0
+                    this.crabe.y = 0
                 }, 1000);
 
             }
@@ -803,24 +843,26 @@
             //update du compteur de pièces
             comptPiece.setText(counterPiece)
 
-
-            //déplacements des ennemis qui bougent
-            if (ennemiVivant) {
-                if (this.serpent.body.blocked.left) {
-                    this.serpent.setVelocityX(50);
-                    console.log("bong")
-
-                }
-
-                if (this.serpent.body.blocked.right) {
-                    this.serpent.setVelocityX(-50);
-                    console.log("bing");
-                }
-            } else {
-                this.serpent.setActive(false).setVisible(false);
-                this.serpent.destroy();
-
-            }
+            
+                        //déplacements des ennemis qui bougent
+                        if (ennemiVivant) {
+                            if (this.serpent.body.blocked.left) {
+                                this.serpent.setVelocityX(50);
+                                console.log("bong")
+            
+                            }
+            
+                            if (this.serpent.body.blocked.right) {
+                                this.serpent.setVelocityX(-50);
+                                console.log("bing");
+                            }
+                        } else {
+                            this.serpent.setActive(false).setVisible(false);
+                            this.serpent.destroy();
+            
+                        }
+            
+                        
             if (ennemiVivant2) {
                 if (this.serpent2.body.blocked.left) {
                     this.serpent2.setVelocityX(50);
@@ -880,7 +922,7 @@
 
             //modification de couleur pour montrer dégats
             if (vieModifiee) {
-                
+
                 this.player.setTint(0xff0000);
                 this.player.setVelocityY(-(this.player.body.velocity.y))
 
@@ -897,12 +939,12 @@
             if (cursors.left.isDown) { //si la touche gauche est appuyée
                 this.player.setVelocityX(-160); //alors vitesse négative en X
                 this.player.anims.play('left', true); //et animation => gauche
-                lastFacingDirection="left"
+                lastFacingDirection = "left"
             }
             else if (cursors.right.isDown) { //sinon si la touche droite est appuyée
                 this.player.setVelocityX(160); //alors vitesse positive en X
                 this.player.anims.play('right', true); //et animation => droite
-                lastFacingDirection="right"
+                lastFacingDirection = "right"
             }
             else { // sinon
                 this.player.setVelocityX(0); //vitesse nulle
@@ -910,16 +952,16 @@
             }
 
 
-            if (cursors.up.isDown ) { //sinon si la touche droite est appuyée
+            if (cursors.up.isDown) { //sinon si la touche droite est appuyée
                 this.player.setVelocityY(-160); //alors vitesse positive en X
                 this.player.anims.play('right', true); //et animation => droite
-                lastFacingDirection="up";
+                lastFacingDirection = "up";
 
             }
             else if (cursors.down.isDown) { //sinon si la touche droite est appuyée
                 this.player.setVelocityY(160); //alors vitesse positive en X
                 this.player.anims.play('right', true); //et animation => droite
-                lastFacingDirection="down";
+                lastFacingDirection = "down";
 
             }
             else { // sinon
@@ -1052,6 +1094,7 @@
 
         function destroySerpent() {
             ennemiVivant = false
+            console.log("oifngosnoqogofgnojqngoqgnqog")
 
 
 
