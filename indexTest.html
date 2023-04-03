@@ -1,0 +1,813 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Mon 1er jeu Phaser</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js">
+    </script>
+    <link rel="stylesheet">
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+
+
+<body>
+
+
+
+
+
+    <script type="text/javascript">
+
+
+
+
+
+
+
+
+
+        var config = {
+            type: Phaser.AUTO,
+             width: 1920, height: 1080,
+            //width: 600, height: 500,
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: false,
+                    debug: true
+                }
+            },
+            input: { gamepad: true },
+            pixelArt: true,
+
+            scene: { preload: preload, create: create, update: update }
+
+
+
+        };
+
+
+        let keyA;
+        let keyZ;
+        let keyE;
+        let keyR;
+
+
+        game = new Phaser.Game(config);
+
+        function preload() {
+            this.load.spritesheet('perso', 'assets/sprites/Sprite_fish_01.png',
+                { frameWidth: 64, frameHeight: 62 });
+
+            this.load.image("place", "assets/tilesetPlaceholder.png");
+
+
+
+            this.load.tilemapTiledJSON("carte", "assets/maps/map_village.json");
+
+
+
+
+
+        }
+
+
+
+
+        var cursors;
+        var gameOver;
+        var counter = 0;
+        var player;
+        gameOver = false;
+        this.sens = 1;
+        wallJump = true;
+        vieModifiee = false; //sert a rajouter des frames d'invincibilité et d'actualiser la barre de vie
+        vie = 10;
+        ennemiVivant = true;
+        ennemiVivant2 = true;
+        powerup1 = false;
+        powerup2 = false;
+        powerup3 = false;
+        add1 = false;
+        add2 = false;
+        add3 = false;
+        isPlayerMovable = true
+        counterPiece = 0
+        hitS = 0
+        estKnockBack = false;
+
+        lastFacingDirection = "right";
+
+
+
+
+
+
+        function create() {
+
+
+            const carteDuNiveau = this.add.tilemap("carte");
+
+            const tileset = carteDuNiveau.addTilesetImage(
+                "tilesetPlaceholder",
+                "place"
+            );
+
+
+
+            const calque_sol = carteDuNiveau.createLayer(
+                "sol",
+                tileset
+            );
+
+            //il s'appelle calque pic mais c'est surtout celui avec la lave
+            const calque_murs = carteDuNiveau.createLayer(
+                "murs",
+                tileset
+            );
+
+            const calque_maisons = carteDuNiveau.createLayer(
+                "maisons",
+                tileset
+            );
+
+
+
+            //a supr, a faire en game object
+            const calque_bonus = carteDuNiveau.createLayer(
+                "bonus",
+                tileset
+            );
+
+            const calque_ennemis = carteDuNiveau.createLayer(
+                "ennemis",
+                tileset
+            );
+
+
+
+            calque_murs.setCollisionByProperty({ EstSolide: true });
+
+
+
+
+            //activation manette
+            this.input.gamepad.once('connected', function (pad) {
+                controller = pad;
+            });
+
+
+
+
+
+
+            // 
+            //ça fonctionne, a rajouter image de barre de vie
+
+            this.player = this.physics.add.sprite(1200, 1500, 'perso');
+            this.player.setSize(64,32,true);
+            this.player.setOffset(2,17);
+            
+
+            this.physics.add.collider(this.player, calque_murs);
+
+
+
+
+/*
+            //affichage UI 
+            ui = this.add.image(this.player.x - 128 - 110, 62, 'ui')
+            ui.setScrollFactor(0);
+            ui.setScale(0.35);
+            ui.depth = 2;
+
+            redbar = this.add.image(this.player.x - 350, 36, 'redbar')
+            redbar.setScrollFactor(0);
+            redbar.depth = 1
+
+            //ajout des pieces
+
+            this.piece1 = this.physics.add.sprite(335, 1020, 'piece');
+            this.piece1.body.allowGravity = false;
+            this.physics.add.collider(this.player, this.piece1, playerHitPiece1);
+            this.physics.add.collider(this.piece1, calque_plateformes);
+            this.piece1.setScale(0.15);
+
+
+
+            this.piece2 = this.physics.add.sprite(112 + 64 + 32, 654 + 32, 'piece');
+            this.piece2.body.allowGravity = false;
+            this.physics.add.collider(this.player, this.piece2, playerHitPiece2);
+            this.physics.add.collider(this.piece2, calque_plateformes);
+            this.piece2.setScale(0.15);
+
+
+            this.piece3 = this.physics.add.sprite(1010, 680, 'piece');
+            this.piece3.body.allowGravity = false;
+            this.physics.add.collider(this.player, this.piece3, playerHitPiece3);
+            this.physics.add.collider(this.piece3, calque_plateformes);
+            this.piece3.setScale(0.15);
+
+
+            //test boites de message
+
+            texte1 = this.add.image(this.piece1.x - 2, this.piece1.y + 5, 'text1')
+            texte1.depth = 5
+
+            texte1.visible = false;
+
+            texte2 = this.add.image(this.piece2.x - 2, this.piece2.y + 5, 'text2')
+            texte2.depth = 3
+            texte2.visible = false;
+
+            texte3 = this.add.image(this.piece3.x - 2, this.piece3.y + 5, 'text3')
+            texte3.depth = 3
+
+            texte3.visible = false;
+
+
+            texteG = this.add.image(this.piece1.x - 2, this.piece1.y + 5, 'textG')
+            texteG.visible = false;
+
+            texteV = this.add.image(this.piece1.x - 2, this.piece1.y + 5, 'textV')
+            texteV.visible = false;
+
+
+            comptPiece = this.add.text(this.player.x - 250 - 75, 60, '0', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif', fontSize: 45 });
+            comptPiece.depth = 4
+            comptPiece.setScrollFactor(0);
+
+
+           
+            //affichage de l'ennemi mobile
+
+            this.serpent = this.physics.add.sprite(700, 1200, 'serpent');
+
+            this.physics.add.collider(this.serpent, calque_plateformes);
+            this.serpent.setScale(0.04);
+            //this.serpent.setVelocityX(50);
+
+            this.physics.add.collider(this.player, this.serpent, playerHitS);
+
+
+            this.serpent2 = this.physics.add.sprite(200, 10, 'serpent');
+
+            this.physics.add.collider(this.serpent2, calque_plateformes);
+            this.serpent2.setScale(0.04);
+            this.serpent2.setVelocityX(50);
+
+            this.physics.add.collider(this.player, this.serpent2, playerHitS);
+
+
+
+
+            //affichage des tirs (le perso ne sait pas se servir d'un fouet donc elle le lance)
+            this.fouet = this.physics.add.sprite(32, 8, 'fouet');
+            this.physics.add.collider(this.serpent, this.fouet, destroySerpent);
+            this.physics.add.collider(this.serpent2, this.fouet, destroySerpent2);
+
+            this.fouet.setScale(0.1);
+            this.fouet.body.allowGravity = false;
+            //       this.fouet.setVelocityX(150);
+            this.fouet.setActive(false)
+
+
+            this.crabe = this.physics.add.sprite(32, 8, 'fouet');
+            this.crabe.width = 1000
+            this.crabe.displayWidth = 1000;
+            this.physics.add.collider(this.serpent, this.crabe, destroySerpent);
+            this.physics.add.collider(this.serpent2, this.crabe, destroySerpent2);
+
+            this.crabe.setScale(0.1);
+            this.crabe.body.allowGravity = false;
+            //       this.fouet.setVelocityX(150);
+            this.crabe.setActive(false)
+
+
+
+
+
+
+
+*/
+
+
+
+            // redimentionnement du monde avec les dimensions calculées via tiled
+            this.physics.world.setBounds(0, 0, 6400, 6400);
+            //  ajout du champs de la caméra de taille identique à celle du monde
+            this.cameras.main.setBounds(0, 0, 6400, 6400);
+            // ancrage de la caméra sur le joueur
+            this.cameras.main.startFollow(this.player);
+            this.cameras.main.setZoom(1);
+
+            this.onWallDroit = false;
+            this.onWallGauche = false;
+            this.canJump = true;
+
+            this.anims.create({
+                key: 'left',
+                frames: this.anims.generateFrameNumbers('perso', { start: 0, end: 3 }),
+                frameRate: 10,
+                repeat: -1
+            });
+            this.anims.create({
+                key: 'turn',
+                frames: [{ key: 'perso', frame: 4 }],
+                frameRate: 20
+            });
+            this.anims.create({
+                key: 'right',
+                frames: this.anims.generateFrameNumbers('perso', { start: 5, end: 8 }),
+                frameRate: 10,
+                repeat: -1
+            });
+
+
+
+            //anim pieces
+
+
+
+
+            cursors = this.input.keyboard.createCursorKeys();
+
+
+
+
+            keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+            keyZ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+            keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+            keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+
+
+            graphics = this.add.graphics();
+
+
+
+            path = new Phaser.Curves.Path(this.player.x+90, this.player.y-90);
+
+            path.splineTo([500, 800, 274, 542, 412, 457, 522, 541, 664, 464]);
+
+
+
+           // graphics.lineStyle(2, 0xffffff, 1);
+
+
+            path.draw(graphics);
+
+
+           // this.bob = this.physics.add.sprite(700, 1200, 'serpent');
+            this.bob = this.add.follower(path, this.player.x+90, this.player.y-90);
+            this.bob.setScale(0.1);
+
+
+            this.bob.startFollow({
+                duration: 10000,
+                yoyo: true,
+                repeat: -1,
+                rotateToPath: true,
+                verticalAdjust: true
+                
+            });
+
+
+            this.physics.add.collider(this.player, this.bob, destroySerpent);
+
+        }
+
+
+
+
+
+        walljump = false;
+
+        function update() {
+
+
+            if(this.player.y>1500){
+
+                this.scene.start("plaines", {});
+            }
+
+            /*
+            this.serpent.x=this.bob.x
+            this.serpent.y=this.bob.y
+
+
+
+
+
+            //attaque épée
+            if (keyA.isDown) {
+                this.fouet.y = this.player.y
+                console.log('A key pressed')
+                this.fouet.setActive(true)
+                if (lastFacingDirection == "right") {
+                    this.fouet.x = this.player.x + 30
+                }
+                else if (lastFacingDirection == "left") {
+                    this.fouet.x = this.player.x - 30
+                }
+                else if (lastFacingDirection == "up") {
+                    this.fouet.x = this.player.x
+                    this.fouet.y = this.player.y - 40
+                    this.fouet.setAngle(90)
+
+                }
+                else if (lastFacingDirection == "down") {
+                    console.log("down")
+                    this.fouet.x = this.player.x
+                    this.fouet.y = this.player.y + 45
+
+                    this.fouet.setAngle(90)
+
+                }
+
+
+                setTimeout(() => {
+                    this.fouet.x = 0;
+
+                }, 1000);
+            }
+
+            //power up crabe
+            if (keyE.isDown) {
+                this.crabe.y = this.player.y
+                console.log('E key pressed')
+                this.crabe.width = 1000
+                this.crabe.setActive(true)
+                if (lastFacingDirection == "right") {
+                    this.crabe.setAngle(0)
+                    this.crabe.flipX=true;
+                    this.crabe.flipY=false;
+                    this.crabe.displayWidth = 100;
+                    this.crabe.displayHeight = 32;
+                    this.crabe.x = this.player.x + 60
+                    this.crabe.displayWidth = 100;
+                }
+                else if (lastFacingDirection == "left") {
+                    this.crabe.x = this.player.x - 60
+                    this.crabe.flipX=false;
+                    this.crabe.flipY=false;
+                    this.crabe.displayWidth = 100;
+                    this.crabe.displayHeight = 32;
+                    this.crabe.setAngle(0)
+                    this.crabe.displayWidth = 100;
+                }
+                else if (lastFacingDirection == "up") {
+                    this.crabe.x = this.player.x
+                    this.crabe.y = this.player.y - 65
+                    this.crabe.flipY=true;
+                    this.crabe.flipX=false;
+
+                    this.crabe.displayWidth = 32;
+                    this.crabe.displayHeight = 100;
+
+                    this.crabe.setAngle(90)
+
+                }
+                else if (lastFacingDirection == "down") {
+                    this.crabe.x = this.player.x
+                    this.crabe.y = this.player.y + 70
+                    this.crabe.flipY=false;
+                    this.crabe.flipX=false;
+                    this.crabe.setAngle(270)
+                    this.crabe.displayWidth = 32;
+                    this.crabe.displayHeight = 100;
+                }
+
+                //this.crabe.displayWidth = 100;
+
+                setTimeout(() => {
+                    this.crabe.x = 0;
+                    this.crabe.y = 0
+                }, 1000);
+
+            }
+
+
+
+
+            //rotation des pièces
+
+            this.piece1.anims.play('rota', true);
+            this.piece2.anims.play('rota', true);
+            this.piece3.anims.play('rota', true);
+
+            //destruction des pieces quand recup
+            if (powerup1) {
+
+                this.piece1.setActive(false).setVisible(false);
+                if (!add1) {
+                    add1 = true
+                    counterPiece++
+
+                }
+
+            }
+            if (powerup2) {
+                this.piece2.setActive(false).setVisible(false);
+                if (!add2) {
+                    add2 = true
+                    counterPiece++
+
+                }
+            }
+            if (powerup3) {
+                this.piece3.setActive(false).setVisible(false);
+                if (!add3) {
+                    add3 = true
+                    counterPiece++
+
+                }
+            }
+
+*/
+            //update du compteur de pièces
+           // comptPiece.setText(counterPiece)
+
+            /*
+                        //déplacements des ennemis qui bougent
+                        if (ennemiVivant) {
+                            if (this.serpent.body.blocked.left) {
+                                this.serpent.setVelocityX(50);
+                                console.log("bong")
+            
+                            }
+            
+                            if (this.serpent.body.blocked.right) {
+                                this.serpent.setVelocityX(-50);
+                                console.log("bing");
+                            }
+                        } else {
+                            this.serpent.setActive(false).setVisible(false);
+                            this.serpent.destroy();
+            
+                        }
+            
+                        
+            if (ennemiVivant2) {
+                if (this.serpent2.body.blocked.left) {
+                    this.serpent2.setVelocityX(50);
+
+                }
+
+                if (this.serpent2.body.blocked.right) {
+                    this.serpent2.setVelocityX(-50);
+                }
+            } else {
+                this.serpent2.setActive(false).setVisible(false);
+                this.serpent2.destroy();
+
+            }
+
+
+
+
+            //passer ça en scènes
+
+            //affichage message game over 
+            if (gameOver) {
+                texteG.visible = true;
+                texteG.immovable = true;
+                texteG.x = this.player.x;
+                texteG.y = this.player.y;
+                texteG.depth = 9999;
+
+                return;
+            }
+
+            //affichage message victoire
+            if (powerup1 && powerup2 && powerup3) {
+                texteV.visible = true;
+                texteV.immovable = true;
+                texteV.x = this.player.x;
+                texteV.y = this.player.y;
+                texteV.depth = 9999;
+
+                return;
+            }
+
+
+
+
+            //lancement du fouet
+
+
+
+            //touches pouvoirs azer
+
+
+
+            //anim du fouet
+            //this.fouet.setAngle(this.fouet.x)
+
+*/
+            //modification de couleur pour montrer dégats
+            if (vieModifiee) {
+
+                this.player.setTint(0xff0000);
+                this.player.setVelocityY(-(this.player.body.velocity.y))
+
+                setTimeout(() => {
+                    this.player.setTint();
+
+                }, 300);
+
+            }
+
+
+            //touches de controlex
+
+            if (cursors.left.isDown) { //si la touche gauche est appuyée
+                this.player.setVelocityX(-160); //alors vitesse négative en X
+                this.player.anims.play('left', true); //et animation => gauche
+                lastFacingDirection = "left"
+            }
+            else if (cursors.right.isDown) { //sinon si la touche droite est appuyée
+                this.player.setVelocityX(160); //alors vitesse positive en X
+                this.player.anims.play('right', true); //et animation => droite
+                lastFacingDirection = "right"
+            }
+            else { // sinon
+                this.player.setVelocityX(0); //vitesse nulle
+                this.player.anims.play('turn'); //animation fait face caméra
+            }
+
+
+            if (cursors.up.isDown) { //sinon si la touche droite est appuyée
+                this.player.setVelocityY(-160); //alors vitesse positive en X
+                this.player.anims.play('right', true); //et animation => droite
+                lastFacingDirection = "up";
+
+            }
+            else if (cursors.down.isDown) { //sinon si la touche droite est appuyée
+                this.player.setVelocityY(160); //alors vitesse positive en X
+                this.player.anims.play('right', true); //et animation => droite
+                lastFacingDirection = "down";
+
+            }
+            else { // sinon
+                this.player.setVelocityY(0); //vitesse nulle
+                this.player.anims.play('turn'); //animation fait face caméra
+            }
+
+
+        }
+
+
+
+        function playerHit1() {
+            if (!vieModifiee) {
+                vie--
+                console.log(vie)
+                degat = true;
+                redbar.x = redbar.x - 21;
+
+                if (vie <= 0) {
+                    console.log("mort")
+
+
+                    gameOver = true;
+                }
+
+
+                //inserer anim frames invincibilité
+                vieModifiee = true;
+                setTimeout(() => {
+                    vieModifiee = false;
+                }, 1000);
+            }
+
+        }
+
+
+        function playerHit2() {
+            if (!vieModifiee) {
+                vie = vie - 2
+                console.log(vie)
+
+                redbar.x = redbar.x - 42;
+
+                if (vie <= 0) {
+                    console.log("mort")
+
+
+                    gameOver = true;
+                }
+
+
+                //inserer anim frames invincibilité
+                vieModifiee = true;
+                setTimeout(() => {
+                    vieModifiee = false;
+
+                }, 1000);
+            }
+
+        }
+
+        function playerHit3() {
+            if (!vieModifiee) {
+                vie = vie - 3
+                console.log(vie)
+
+                redbar.x = redbar.x - 63;
+
+                if (vie <= 0) {
+                    console.log("mort")
+
+
+                    gameOver = true;
+                }
+
+
+                //inserer anim frames invincibilité
+                vieModifiee = true;
+                setTimeout(() => {
+                    vieModifiee = false;
+                }, 1000);
+            }
+
+        }
+
+        function playerHitS() {
+            if (!vieModifiee) {
+                console.log("toucheS")
+
+
+
+
+            }
+
+        }
+
+
+        function playerHitPiece1() {
+            texte1.visible = true;
+            isPlayerMovable = false;
+            powerup1 = true
+            setTimeout(() => {
+                texte1.visible = false;
+                isPlayerMovable = true;
+
+            }, 5000);
+
+
+        }
+
+        function playerHitPiece2() {
+            powerup2 = true
+            return
+            setTimeout(() => {
+                texte2.visible = false;
+                isPlayerMovable = true;
+            }, 5000);
+
+
+        }
+
+        function playerHitPiece3() {
+            //    texte3.visible = true;
+            powerup3 = true
+
+
+        }
+
+
+        function destroySerpent() {
+            ennemiVivant = false
+            console.log("oifngosnoqogofgnojqngoqgnqog")
+
+
+
+
+        }
+
+
+        function destroySerpent2() {
+            ennemiVivant2 = false
+
+
+
+
+        }
+
+
+
+
+
+    </script>
+    <div id="myProgress">
+        <div id="myBar" style="color:blue;text-align:center;"></div>
+    </div>
+
+</body>
+
+</html>
