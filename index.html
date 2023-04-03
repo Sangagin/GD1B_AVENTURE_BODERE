@@ -763,7 +763,7 @@
                 }, 1000);
             }
 
-
+            //power up crabe
             if (keyE.isDown) {
                 this.crabe.y = this.player.y
                 console.log('E key pressed')
@@ -771,29 +771,45 @@
                 this.crabe.setActive(true)
                 if (lastFacingDirection == "right") {
                     this.crabe.setAngle(0)
+                    this.crabe.flipX=true;
+                    this.crabe.flipY=false;
+                    this.crabe.displayWidth = 100;
+                    this.crabe.displayHeight = 32;
                     this.crabe.x = this.player.x + 60
+                    this.crabe.displayWidth = 100;
                 }
                 else if (lastFacingDirection == "left") {
                     this.crabe.x = this.player.x - 60
+                    this.crabe.flipX=false;
+                    this.crabe.flipY=false;
+                    this.crabe.displayWidth = 100;
+                    this.crabe.displayHeight = 32;
                     this.crabe.setAngle(0)
-
+                    this.crabe.displayWidth = 100;
                 }
                 else if (lastFacingDirection == "up") {
                     this.crabe.x = this.player.x
                     this.crabe.y = this.player.y - 65
+                    this.crabe.flipY=true;
+                    this.crabe.flipX=false;
+
+                    this.crabe.displayWidth = 32;
+                    this.crabe.displayHeight = 100;
+
                     this.crabe.setAngle(90)
-                    this.crabe.setSize(10,10)
 
                 }
                 else if (lastFacingDirection == "down") {
                     this.crabe.x = this.player.x
                     this.crabe.y = this.player.y + 70
-
-                    this.crabe.setAngle(90)
-
+                    this.crabe.flipY=false;
+                    this.crabe.flipX=false;
+                    this.crabe.setAngle(270)
+                    this.crabe.displayWidth = 32;
+                    this.crabe.displayHeight = 100;
                 }
 
-                this.crabe.displayWidth = 100;
+                //this.crabe.displayWidth = 100;
 
                 setTimeout(() => {
                     this.crabe.x = 0;
