@@ -10,7 +10,7 @@ class plaines extends Phaser.Scene {
         this.load.spritesheet('perso', 'assets/sprites/Sprite_fish_01.png',
             { frameWidth: 64, frameHeight: 62 });
 
-        this.load.image("place", "assets/tilesetPlaceholder.png");
+        this.load.image("tilePlaine", "assets/tileset.png");
         this.load.tilemapTiledJSON("cartePlaines", "assets/maps/map_plaines.json");
 
     }
@@ -20,19 +20,33 @@ class plaines extends Phaser.Scene {
 
         const carteDuNiveauPlaines = this.add.tilemap("cartePlaines");
 
-        const tileset = carteDuNiveauPlaines.addTilesetImage(
+        const tilesetPlaine = carteDuNiveauPlaines.addTilesetImage(
             "tilesetPlaceholder",
-            "place"
+            "tilePlaine"
         );
 
 
 
         //il s'appelle calque pic mais c'est surtout celui avec la lave
-        const calque_murs_plaines = carteDuNiveauPlaines.createLayer(
-            "murs",
-            tileset
+        const calque_sol_plaines = carteDuNiveauPlaines.createLayer(
+            "sol",
+            tilesetPlaine
         );
 
+        const calque__sous_murs_plaines = carteDuNiveauPlaines.createLayer(
+            "sous_murs",
+            tilesetPlaine
+        );
+
+        const calque_murs_plaines = carteDuNiveauPlaines.createLayer(
+            "murs",
+            tilesetPlaine
+        );
+
+        const calque_cailloux_plaines = carteDuNiveauPlaines.createLayer(
+            "cailloux",
+            tilesetPlaine
+        );
 
 
 
@@ -56,18 +70,18 @@ class plaines extends Phaser.Scene {
 
 
 
-        cursors = this.input.keyboard.createCursorKeys();
+        this.cursors = this.input.keyboard.createCursorKeys();
 
 
 
 
-        keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-        keyZ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
-        keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
-        keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+        this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        this.keyZ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+        this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+        this.keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
 
-        
+
 
 
 
@@ -76,40 +90,40 @@ class plaines extends Phaser.Scene {
     }
 
 
-    update(){
+    update() {
 
 
-        if (cursors.left.isDown) { //si la touche gauche est appuyée
+        if (this.cursors.left.isDown) { //si la touche gauche est appuyée
             this.player.setVelocityX(-160); //alors vitesse négative en X
-           // this.player.anims.play('left', true); //et animation => gauche
-            lastFacingDirection = "left"
+            // this.player.anims.play('left', true); //et animation => gauche
+            this.lastFacingDirection = "left"
         }
-        else if (cursors.right.isDown) { //sinon si la touche droite est appuyée
+        else if (this.cursors.right.isDown) { //sinon si la touche droite est appuyée
             this.player.setVelocityX(160); //alors vitesse positive en X
-           // this.player.anims.play('right', true); //et animation => droite
-            lastFacingDirection = "right"
+            // this.player.anims.play('right', true); //et animation => droite
+            this.lastFacingDirection = "right"
         }
         else { // sinon
             this.player.setVelocityX(0); //vitesse nulle
-          //  this.player.anims.play('turn'); //animation fait face caméra
+            //  this.player.anims.play('turn'); //animation fait face caméra
         }
 
 
-        if (cursors.up.isDown) { //sinon si la touche droite est appuyée
+        if (this.cursors.up.isDown) { //sinon si la touche droite est appuyée
             this.player.setVelocityY(-160); //alors vitesse positive en X
-         //   this.player.anims.play('right', true); //et animation => droite
-            lastFacingDirection = "up";
+            //   this.player.anims.play('right', true); //et animation => droite
+            this.lastFacingDirection = "up";
 
         }
-        else if (cursors.down.isDown) { //sinon si la touche droite est appuyée
+        else if (this.cursors.down.isDown) { //sinon si la touche droite est appuyée
             this.player.setVelocityY(160); //alors vitesse positive en X
-          //  this.player.anims.play('right', true); //et animation => droite
-            lastFacingDirection = "down";
+            //  this.player.anims.play('right', true); //et animation => droite
+            this.lastFacingDirection = "down";
 
         }
         else { // sinon
             this.player.setVelocityY(0); //vitesse nulle
-          //  this.player.anims.play('turn'); //animation fait face caméra
+            //  this.player.anims.play('turn'); //animation fait face caméra
         }
 
     }

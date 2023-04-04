@@ -13,7 +13,7 @@ class village extends Phaser.Scene {
         this.load.spritesheet('perso', 'assets/sprites/Sprite_fish_01.png',
             { frameWidth: 64, frameHeight: 62 });
 
-        this.load.image("place", "assets/tilesetPlaceholder.png");
+        this.load.image("tileVillage", "assets/tileset.png");
 
 
 
@@ -28,33 +28,33 @@ class village extends Phaser.Scene {
 
 
 
-        const tileset = carteDuNiveauVillage.addTilesetImage(
+        const tilesetVillage = carteDuNiveauVillage.addTilesetImage(
             "tilesetPlaceholder",
-            "place"
+            "tileVillage"
         );
 
 
         const calque_sol_village = carteDuNiveauVillage.createLayer(
             "sol",
-            tileset
+            tilesetVillage
         );
 
         //il s'appelle calque pic mais c'est surtout celui avec la lave
         const calque_murs_village = carteDuNiveauVillage.createLayer(
             "murs",
-            tileset
+            tilesetVillage
         );
 
         const calque_maisons_village = carteDuNiveauVillage.createLayer(
             "maisons",
-            tileset
+            tilesetVillage
         );
 
 
 
         calque_murs_village.setCollisionByProperty({ EstSolide: true });
 
-        this.player = this.physics.add.sprite(1200, 1500, 'perso');
+        this.player = this.physics.add.sprite(900, 4000, 'perso');
         this.player.setSize(64, 32, true);
         this.player.setOffset(2, 17);
 
@@ -130,19 +130,19 @@ class village extends Phaser.Scene {
 
 
 
-        if (this.player.y > 1500) {
+        if (this.player.x > 3000) {
             this.scene.start("plaines");
         }
 
         //touches de controlex
 
         if (this.cursors.left.isDown) { //si la touche gauche est appuyée
-            this.player.setVelocityX(-160); //alors vitesse négative en X
+            this.player.setVelocityX(-200); //alors vitesse négative en X
             this.player.anims.play('left', true); //et animation => gauche
             this.lastFacingDirection = "left"
         }
         else if (this.cursors.right.isDown) { //sinon si la touche droite est appuyée
-            this.player.setVelocityX(160); //alors vitesse positive en X
+            this.player.setVelocityX(200); //alors vitesse positive en X
             this.player.anims.play('right', true); //et animation => droite
             this.lastFacingDirection = "right"
         }
@@ -152,13 +152,13 @@ class village extends Phaser.Scene {
 
 
         if (this.cursors.up.isDown) { //sinon si la touche droite est appuyée
-            this.player.setVelocityY(-160); //alors vitesse positive en X
+            this.player.setVelocityY(-200); //alors vitesse positive en X
             this.player.anims.play('up', true); //et animation => droite
             this.lastFacingDirection = "up";
 
         }
         else if (this.cursors.down.isDown) { //sinon si la touche droite est appuyée
-            this.player.setVelocityY(160); //alors vitesse positive en X
+            this.player.setVelocityY(200); //alors vitesse positive en X
             this.player.anims.play('down', true); //et animation => droite
             this.lastFacingDirection = "down";
 
