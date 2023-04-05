@@ -34,7 +34,7 @@ class plaines extends Phaser.Scene {
         );
 
         const calque__sous_murs_plaines = carteDuNiveauPlaines.createLayer(
-            "sous_murs",
+            "sous_mur",
             tilesetPlaine
         );
 

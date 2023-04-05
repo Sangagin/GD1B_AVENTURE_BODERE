@@ -16,6 +16,7 @@
 <body>
     <script src="plaines.js"></script>
     <script src="village.js"></script>
+    <script src="gestionUI.js"></script>
     <script type="text/javascript">
 
 
@@ -45,38 +46,46 @@
 
             create() {
 
+                this.powerup2=false;
+                this.powerup3=false;
+                this.vieActuelle=2;
+                this.vieMax=2;
 
-                this.fond = this.add.image(640, 720/2, 'fondmenu');
+
+                this.fond = this.add.image(640, 720 / 2, 'fondmenu');
                 this.fond.setScale(0.3)
-                this.buttonS = this.add.sprite(660, 360+20, 'bouttonStart').setInteractive();
+                this.buttonS = this.add.sprite(660, 360 + 20, 'bouttonStart').setInteractive();
                 this.buttonS.setScale(0.28)
                 this.buttonQ = this.add.sprite(660, 500, 'bouttonQ').setInteractive();
                 this.buttonQ.setScale(0.28)
 
+                console.log(this.powerup2)
+                this.buttonS.on('pointerdown', function () {
+                    this.scene.scene.start('village',{powerup2:this.scene.powerup2,vieA:this.scene.vieActuelle,vieM:this.scene.vieMax});
+                });
 
-        this.buttonS.on('pointerup', function () {
-            this.scene.scene.start("village");
-        });
-
-        this.buttonQ.on('pointerup', function () {
-            this.scene.scene.start("village");
-        });
+                this.buttonQ.on('pointerup', function () {
+                    this.scene.scene.start('village',{powerup:this.powerup2});
+                });
 
 
 
             }
 
 
-        update() {
+            update() {
+
+
+
+            }
+
 
 
 
         }
 
 
-
-
-        }
+        
 
 
 

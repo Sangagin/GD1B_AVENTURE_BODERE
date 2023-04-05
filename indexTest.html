@@ -389,6 +389,9 @@
 
         function update() {
 
+            this.input.on('pointerdown', (pointer) => {
+                console.log(this.pointer.x + "" + this.pointer.y)
+            })
 
             if(this.player.y>1500){
 
