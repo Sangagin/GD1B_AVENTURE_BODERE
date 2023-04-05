@@ -100,8 +100,7 @@ class village extends Phaser.Scene {
         this.pince2 = this.physics.add.sprite(0, 6400, 'pince2');
 
 
-        this.attkA=true;
-        this.attkB=true;
+        this.attk=true;
 
 
         //cursors
@@ -133,20 +132,20 @@ class village extends Phaser.Scene {
 
         this.anims.create({
             key: 'right',
-            frames: this.anims.generateFrameNumbers('perso', { start: -1, end: 3 }),
+            frames: this.anims.generateFrameNumbers('perso', { start: 0, end: 3 }),
             frameRate: 5,
             repeat: -1
         });
 
         this.anims.create({
             key: 'up',
-            frames: this.anims.generateFrameNumbers('perso', { start: 10, end: 11 }),
+            frames: this.anims.generateFrameNumbers('perso', { start: 12, end: 15 }),
             frameRate: 5,
             repeat: -1
         });
         this.anims.create({
             key: 'down',
-            frames: this.anims.generateFrameNumbers('perso', { start: 8, end: 9 }),
+            frames: this.anims.generateFrameNumbers('perso', { start: 8, end: 11 }),
             frameRate: 5,
             repeat: -1
         });
@@ -211,8 +210,8 @@ class village extends Phaser.Scene {
 
 
 
-        if (this.keyA.isDown && this.attkA) {
-            this.attkA=false;
+        if (this.keyA.isDown && this.attk) {
+            this.attk=false;
             this.cursors.right.reset();
             this.cursors.left.reset();
             this.cursors.up.reset();
@@ -255,13 +254,13 @@ class village extends Phaser.Scene {
                 this.epee.y = 6200;
                 this.epee2.x = 0;
                 this.epee2.y = 6200;
-                this.attkA=true;
-            }, 600);
+                this.attk=true;
+            }, 550);
         }
 
 
-        if (this.keyZ.isDown && this.attkB) {
-            this.attkB=false;
+        if (this.keyZ.isDown && this.attk) {
+            this.attk=false;
             this.cursors.right.reset();
             this.cursors.left.reset();
             this.cursors.up.reset();
@@ -277,7 +276,7 @@ class village extends Phaser.Scene {
             }
             else if (this.lastFacingDirection == "left") {
                 this.pince.anims.play('pince', true); 
-                this.pince.x = this.player.x - 70
+                this.pince.x = this.player.x - 110
                 this.pince.y = this.player.y
                 this.pince.setAngle(180)
 
@@ -286,14 +285,14 @@ class village extends Phaser.Scene {
             else if (this.lastFacingDirection == "up") {
                 this.pince2.anims.play('pince2', true); 
                 this.pince2.x = this.player.x
-                this.pince2.y = this.player.y - 70
+                this.pince2.y = this.player.y - 110
                 this.pince2.setAngle(180);
                 
             }
             else if (this.lastFacingDirection == "down") {
                 this.pince2.anims.play('pince2', true); 
                 this.pince2.x = this.player.x;
-                this.pince2.y = this.player.y + 70;
+                this.pince2.y = this.player.y + 110;
                 this.pince2.setAngle(0);
             }
 
@@ -304,7 +303,7 @@ class village extends Phaser.Scene {
                 this.pince.y = 6200;
                 this.pince2.x = 0;
                 this.pince2.y = 6200;
-                this.attkB=true;
+                this.attk=true;
             }, 600);
         }
 
