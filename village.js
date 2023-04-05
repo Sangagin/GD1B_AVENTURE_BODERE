@@ -14,11 +14,21 @@ class village extends Phaser.Scene {
             { frameWidth: 64, frameHeight: 64 });
         this.load.spritesheet('courrant', 'assets/sprites/courrant.png',
             { frameWidth: 64, frameHeight: 64 });
+        this.load.spritesheet('epee', 'assets/anims/Anim_epee.png',
+            { frameWidth: 64, frameHeight: 64*2 });
+            
+        this.load.spritesheet('epee2', 'assets/anims/Anim_epee2.png',
+        { frameWidth: 64*2, frameHeight: 64 });
 
+        this.load.spritesheet('pince', 'assets/anims/Sprite_pince.png',
+        { frameWidth: 128, frameHeight: 64 });
+
+        this.load.spritesheet('pince2', 'assets/anims/Sprite_pince2.png',
+        { frameWidth: 64, frameHeight: 128 });
 
 
         this.load.image("tileVillage", "assets/tileset.png");
-        
+
 
 
         this.load.tilemapTiledJSON("carteVillage", "assets/maps/map_village.json");
@@ -59,19 +69,19 @@ class village extends Phaser.Scene {
         calque_murs_village.setCollisionByProperty({ EstSolide: true });
 
 
-            //création courrant
+        //création courrant
         this.courant = this.physics.add.sprite(1200, 4000, 'courrant');
         this.courant.body.immovable = true;
         this.courant.body.allowGravity = false;
 
-            //création player
+        //création player
         this.player = this.physics.add.sprite(900, 4000, 'perso');
         this.player.setScale(1.6);
         this.player.setSize(64, 32, true);
         this.player.setOffset(2, 17);
 
 
-
+        //collider avec les murs
         this.physics.add.collider(this.player, calque_murs_village);
 
 
@@ -83,7 +93,18 @@ class village extends Phaser.Scene {
         this.cameras.main.setZoom(1);
 
 
+        //création armes
+        this.epee = this.physics.add.sprite(0, 6400, 'epee');
+        this.epee2 = this.physics.add.sprite(0, 6400, 'epee2');
+        this.pince = this.physics.add.sprite(0, 6400, 'pince');
+        this.pince2 = this.physics.add.sprite(0, 6400, 'pince2');
 
+
+        this.attkA=true;
+        this.attkB=true;
+
+
+        //cursors
         this.cursors = this.input.keyboard.createCursorKeys();
         this.lastFacingDirection = "right"
 
@@ -92,7 +113,6 @@ class village extends Phaser.Scene {
         this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.keyZ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
         this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
-        this.keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
 
 
@@ -132,6 +152,7 @@ class village extends Phaser.Scene {
         });
 
 
+        //anim courrant
         this.anims.create({
             key: 'coura',
             frames: this.anims.generateFrameNumbers('courrant', { start: 0, end: 8 }),
@@ -140,8 +161,39 @@ class village extends Phaser.Scene {
         });
 
 
+        //anim epee
+        this.anims.create({
+            key: 'epee',
+            frames: this.anims.generateFrameNumbers('epee', { start: 0, end: 5 }),
+            frameRate: 10,
+            repeat: 0
+        });
+        this.anims.create({
+            key: 'epee2',
+            frames: this.anims.generateFrameNumbers('epee2', { start: 0, end: 5 }),
+            frameRate: 10,
+            repeat: 0
+        });
 
-        this.physics.add.overlap(this.player, this.courant,this.moveForce, null, this);
+
+
+        //anim pince
+        this.anims.create({
+            key: 'pince',
+            frames: this.anims.generateFrameNumbers('pince', { start: 0, end: 5 }),
+            frameRate: 15,
+            repeat: 0
+        });
+        this.anims.create({
+            key: 'pince2',
+            frames: this.anims.generateFrameNumbers('pince2', { start: 0, end: 5 }),
+            frameRate: 15,
+            repeat: 0
+        });
+
+
+
+        this.physics.add.overlap(this.player, this.courant, this.moveForce, null, this);
 
 
 
@@ -150,10 +202,115 @@ class village extends Phaser.Scene {
     update() {
 
 
-
+        //param des téléporteurs de scenes
         if (this.player.x > 3000) {
             this.scene.start("plaines");
         }
+
+        //affichage des attaques
+
+
+
+        if (this.keyA.isDown && this.attkA) {
+            this.attkA=false;
+            this.cursors.right.reset();
+            this.cursors.left.reset();
+            this.cursors.up.reset();
+            this.cursors.down.reset();
+            
+
+            if (this.lastFacingDirection == "right") {
+                this.epee.anims.play('epee', true); 
+                this.epee.x = this.player.x + 70
+                this.epee.y = this.player.y
+                this.epee.setAngle(0)
+
+            }
+            else if (this.lastFacingDirection == "left") {
+                this.epee.anims.play('epee', true); 
+                this.epee.x = this.player.x - 70
+                this.epee.y = this.player.y
+                this.epee.setAngle(180)
+
+            }
+
+            else if (this.lastFacingDirection == "up") {
+                this.epee2.anims.play('epee2', true); 
+                this.epee2.x = this.player.x
+                this.epee2.y = this.player.y - 70
+                this.epee2.setAngle(180);
+                
+            }
+            else if (this.lastFacingDirection == "down") {
+                this.epee2.anims.play('epee2', true); 
+                this.epee2.x = this.player.x;
+                this.epee2.y = this.player.y + 70;
+                this.epee2.setAngle(0);
+            }
+
+
+            setTimeout(() => {
+                this.input.keyboard.enabled = true;
+                this.epee.x = 0;
+                this.epee.y = 6200;
+                this.epee2.x = 0;
+                this.epee2.y = 6200;
+                this.attkA=true;
+            }, 600);
+        }
+
+
+        if (this.keyZ.isDown && this.attkB) {
+            this.attkB=false;
+            this.cursors.right.reset();
+            this.cursors.left.reset();
+            this.cursors.up.reset();
+            this.cursors.down.reset();
+
+
+            if (this.lastFacingDirection == "right") {
+                this.pince.anims.play('pince', true); 
+                this.pince.x = this.player.x + 110
+                this.pince.y = this.player.y
+                this.pince.setAngle(0)
+
+            }
+            else if (this.lastFacingDirection == "left") {
+                this.pince.anims.play('pince', true); 
+                this.pince.x = this.player.x - 70
+                this.pince.y = this.player.y
+                this.pince.setAngle(180)
+
+            }
+
+            else if (this.lastFacingDirection == "up") {
+                this.pince2.anims.play('pince2', true); 
+                this.pince2.x = this.player.x
+                this.pince2.y = this.player.y - 70
+                this.pince2.setAngle(180);
+                
+            }
+            else if (this.lastFacingDirection == "down") {
+                this.pince2.anims.play('pince2', true); 
+                this.pince2.x = this.player.x;
+                this.pince2.y = this.player.y + 70;
+                this.pince2.setAngle(0);
+            }
+
+
+            setTimeout(() => {
+                this.input.keyboard.enabled = true;
+                this.pince.x = 0;
+                this.pince.y = 6200;
+                this.pince2.x = 0;
+                this.pince2.y = 6200;
+                this.attkB=true;
+            }, 600);
+        }
+
+
+
+
 
         //touches de controlex
 
@@ -163,7 +320,7 @@ class village extends Phaser.Scene {
             this.lastFacingDirection = "left"
             this.player.setSize(64, 32, true);
             this.player.setOffset(2, 17);
-            this.courant.anims.play('coura',true);
+            this.courant.anims.play('coura', true);
         }
         else if (this.cursors.right.isDown) { //sinon si la touche droite est appuyée
             this.player.setVelocityX(200); //alors vitesse positive en X
@@ -181,7 +338,7 @@ class village extends Phaser.Scene {
             this.player.setVelocityY(-200); //alors vitesse positive en X
             this.player.anims.play('up', true); //et animation => droite
             this.lastFacingDirection = "up";
-           // this.player.setSize(32, 64, true);
+            // this.player.setSize(32, 64, true);
             //this.player.setOffset(2, 17);
 
         }
@@ -190,7 +347,7 @@ class village extends Phaser.Scene {
             this.player.anims.play('down', true); //et animation => droite
             this.lastFacingDirection = "down";
             //this.player.setSize(32, 64, true);
-           // this.player.setOffset(2, 17);
+            // this.player.setOffset(2, 17);
 
         }
         else { // sinon
@@ -204,13 +361,13 @@ class village extends Phaser.Scene {
 
     }
 
-    moveForce(){
+    moveForce() {
 
-        
+
         setTimeout(() => {
             this.cursors.right.reset();
         }, 300);
-        
+
 
 
     }
