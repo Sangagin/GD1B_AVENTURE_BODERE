@@ -12,9 +12,12 @@ class village extends Phaser.Scene {
     init(data) {
         console.log('init', data);
 
+        this.origine = data.origin
         this.powerup2 = data.powerup2;
+        this.powerup3 = data.powerup3;
         this.vieActuelle = data.vieA;
         this.vieMax = data.vieM;
+        this.counterPerle = data.counterPerle
     }
 
 
@@ -37,18 +40,26 @@ class village extends Phaser.Scene {
 
 
 
-        this.load.spritesheet('UI1', 'assets/UI/UI_1.png',
-            { frameWidth: 576, frameHeight: 320 });
-        this.load.spritesheet('UI2', 'assets/UI/UI_2.png',
-            { frameWidth: 576, frameHeight: 320 });
-        this.load.spritesheet('UI3', 'assets/UI/UI_3.png',
-            { frameWidth: 576, frameHeight: 320 });
+        if (this.powerup3) {
+            this.load.spritesheet('UI1', 'assets/UI/UI_3.png',
+                { frameWidth: 576, frameHeight: 320 });
+        }
+        else if (this.powerup2) {
+            this.load.spritesheet('UI1', 'assets/UI/UI_2.png',
+                { frameWidth: 576, frameHeight: 320 });
+        }
+        else {
+            this.load.spritesheet('UI1', 'assets/UI/UI_1.png',
+                { frameWidth: 576, frameHeight: 320 });
+        }
 
 
         this.load.image("tileVillage", "assets/tileset.png");
         this.load.image("gun", "assets/anims/pistolet_crevette.png");
         this.load.image("bulles", "assets/anims/bulles.png");
         this.load.image("requin", "assets/sprites/Sprite_enemmi_01.png");
+        this.load.image("bullot", "assets/sprites/Sprite_enemmi_02.png");
+        this.load.image("crevette", "assets/sprites/Sprite_enemmi_03.png");
         this.load.image("soin", "assets/sprites/Sprite_coeur_soin.png");
         this.load.image("perle", "assets/sprites/Sprite_perle.png");
 
@@ -97,38 +108,49 @@ class village extends Phaser.Scene {
         this.courant = this.physics.add.sprite(1200, 4000, 'courrant');
         this.courant.body.immovable = true;
         this.courant.body.allowGravity = false;
+        this.courantActif = false;
+
 
         //création player
-        this.player = this.physics.add.sprite(900, 4000, 'perso');
-        // this.player.setScale(1.6);
-        //this.player.setSize(64, 32, true);
-        //this.player.setOffset(2, 17);
+        if (this.origine == "menu") {
 
+
+            this.player = this.physics.add.sprite(900, 4000, 'perso');
+        }
+        else if (this.origine == "plaines") {
+            this.player = this.physics.add.sprite(6200, 2230, 'perso');
+
+        }
+        else {
+            this.player = this.physics.add.sprite(3720, 6200, 'perso');
+
+        }
+
+        this.origine = "village"
 
         //collider avec les murs
-        this.physics.add.collider(this.player, calque_murs_village);
+        //this.physics.add.collider(this.player, calque_murs_village);
 
 
+        //camera
         this.physics.world.setBounds(0, 0, 6400, 6400);
-        //  ajout du champs de la caméra de taille identique à celle du monde
         this.cameras.main.setBounds(0, 0, 6400, 6400);
-        // ancrage de la caméra sur le joueur
         this.cameras.main.startFollow(this.player);
         this.cameras.main.setZoom(1);
 
-        console.log(this.cameras.main.x)
         //affichage UI
-        this.ui = this.physics.add.sprite(0, 0, 'UI1');
+        this.ui = this.physics.add.sprite(235, 130, 'UI1');
         this.ui.setScale(0.8)
         this.ui.depth = 2;
+        this.ui.setScrollFactor(0)
 
-        this.comptPerle = this.add.text(135, 195, 'x 0', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif', fontSize: 30 });
+        //compteur monnaie
+        this.comptPerle = this.add.text(135, 195, '0', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif', fontSize: 30 });
         this.comptPerle.depth = 4
         this.comptPerle.setScrollFactor(0);
         this.comptPerle.setScale(0.8)
 
 
-        //this.ui.setScrollFactor(0);
 
 
         //création armes
@@ -143,25 +165,178 @@ class village extends Phaser.Scene {
         this.bulles4 = this.physics.add.sprite(0, 6400, 'bulles');
 
         this.bulleUtil = 0;
-        this.drop = false;
         this.attk = true;
         this.degatsPris = false;
 
 
+
         //création ennemis
+        {
         {
             this.requin1 = this.physics.add.sprite(1200, 3800, 'requin');
             this.requin1.body.immovable = true;
-            this.physics.add.collider(this.player, this.requin1, this.playerHitR);
+            this.physics.add.collider(this.player, this.requin1, this.playerHitR, null, this);
             this.physics.add.overlap(this.epee, this.requin1, this.playerFrappeR, null, this);
-            this.physics.add.overlap(this.epee2, this.requin1, this.playerFrappeR);
+            this.physics.add.overlap(this.epee2, this.requin1, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.pince, this.requin1, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.pince2, this.requin1, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles1, this.requin1, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles2, this.requin1, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles3, this.requin1, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles4, this.requin1, this.playerFrappeR, null, this);
+            this.perleR1 = this.physics.add.sprite(0, 6200, 'perle');
+            this.physics.add.collider(this.player, this.perleR1, this.playerPerle, null, this);
+            this.soinR1 = this.physics.add.sprite(0, 6200, 'soin');
+            this.physics.add.collider(this.player, this.soinR1, this.playerSoin, null, this);
+            this.requin1.perle = this.perleR1;
+            this.requin1.soin = this.soinR1;
+        }
+        {
+            this.requin2 = this.physics.add.sprite(830, 1728, 'requin');
+            this.requin2.body.immovable = true;
+            this.physics.add.collider(this.player, this.requin2, this.playerHitR, null, this);
+            this.physics.add.overlap(this.epee, this.requin2, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.epee2, this.requin2, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.pince, this.requin2, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.pince2, this.requin2, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles1, this.requin2, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles2, this.requin2, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles3, this.requin2, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles4, this.requin2, this.playerFrappeR, null, this);
+            this.perleR2 = this.physics.add.sprite(0, 6200, 'perle');
+            this.physics.add.collider(this.player, this.perleR2, this.playerPerle, null, this);
+            this.soinR2 = this.physics.add.sprite(0, 6200, 'soin');
+            this.physics.add.collider(this.player, this.soinR2, this.playerSoin, null, this);
+            this.requin2.perle = this.perleR2;
+            this.requin2.soin = this.soinR2;
         }
 
-        //creation d'autants de perles que d'ennemis
+        {
+            this.bullot1 = this.physics.add.sprite(1375, 3680, 'bullot');
+            this.bullot1.body.immovable = true;
+            this.physics.add.collider(this.player, this.bullot1, this.playerHitR, null, this);
+            this.physics.add.overlap(this.epee, this.bullot1, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.epee2, this.bullot1, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.pince, this.bullot1, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.pince2, this.bullot1, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles1, this.bullot1, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles2, this.bullot1, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles3, this.bullot1, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles4, this.bullot1, this.playerFrappeRate, null, this);
+            this.perleB1 = this.physics.add.sprite(0, 6200, 'perle');
+            this.physics.add.collider(this.player, this.perleB1, this.playerPerle, null, this);
+            this.soinB1 = this.physics.add.sprite(0, 6200, 'soin');
+            this.physics.add.collider(this.player, this.soinB1, this.playerSoin, null, this);
+            this.bullot1.perle = this.perleB1;
+            this.bullot1.soin = this.soinB1;
+        }
 
-        this.perle = this.physics.add.sprite(0, 6200, 'perle');
+        {
+            this.bullot2 = this.physics.add.sprite(5530, 3170, 'bullot');
+            this.bullot2.body.immovable = true;
+            this.physics.add.collider(this.player, this.bullot2, this.playerHitR, null, this);
+            this.physics.add.overlap(this.epee, this.bullot2, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.epee2, this.bullot2, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.pince, this.bullot2, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.pince2, this.bullot2, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles1, this.bullot2, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles2, this.bullot2, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles3, this.bullot2, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles4, this.bullot2, this.playerFrappeRate, null, this);
+            this.perleB2 = this.physics.add.sprite(0, 6200, 'perle');
+            this.physics.add.collider(this.player, this.perleB2, this.playerPerle, null, this);
+            this.soinB2 = this.physics.add.sprite(0, 6200, 'soin');
+            this.physics.add.collider(this.player, this.soinB2, this.playerSoin, null, this);
+            this.bullot2.perle = this.perleB2;
+            this.bullot2.soin = this.soinB2;
+        }
+        {
+            this.bullot3 = this.physics.add.sprite(5530, 3170+64, 'bullot');
+            this.bullot3.body.immovable = true;
+            this.physics.add.collider(this.player, this.bullot3, this.playerHitR, null, this);
+            this.physics.add.overlap(this.epee, this.bullot3, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.epee2, this.bullot3, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.pince, this.bullot3, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.pince2, this.bullot3, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles1, this.bullot3, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles2, this.bullot3, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles3, this.bullot3, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles4, this.bullot3, this.playerFrappeRate, null, this);
+            this.perleB3 = this.physics.add.sprite(0, 6200, 'perle');
+            this.physics.add.collider(this.player, this.perleB3, this.playerPerle, null, this);
+            this.soinB3 = this.physics.add.sprite(0, 6200, 'soin');
+            this.physics.add.collider(this.player, this.soinB3, this.playerSoin, null, this);
+            this.bullot3.perle = this.perleB3;
+            this.bullot3.soin = this.soinB3;
+        }
+        {
+            this.bullot4 = this.physics.add.sprite(5530, 3170+128, 'bullot');
+            this.bullot4.body.immovable = true;
+            this.physics.add.collider(this.player, this.bullot4, this.playerHitR, null, this);
+            this.physics.add.overlap(this.epee, this.bullot4, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.epee2, this.bullot4, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.pince, this.bullot4, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.pince2, this.bullot4, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles1, this.bullot4, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles2, this.bullot4, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles3, this.bullot4, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles4, this.bullot4, this.playerFrappeRate, null, this);
+            this.perleB4 = this.physics.add.sprite(0, 6200, 'perle');
+            this.physics.add.collider(this.player, this.perleB4, this.playerPerle, null, this);
+            this.soinB4 = this.physics.add.sprite(0, 6200, 'soin');
+            this.physics.add.collider(this.player, this.soinB4, this.playerSoin, null, this);
+            this.bullot4.perle = this.perleB4;
+            this.bullot4.soin = this.soinB4;
+        }
+        {
+            this.bullot5 = this.physics.add.sprite(5530, 3170+128+64, 'bullot');
+            this.bullot5.body.immovable = true;
+            this.physics.add.collider(this.player, this.bullot5, this.playerHitR, null, this);
+            this.physics.add.overlap(this.epee, this.bullot5, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.epee2, this.bullot5, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.pince, this.bullot5, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.pince2, this.bullot5, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles1, this.bullot5, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles2, this.bullot5, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles3, this.bullot5, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles4, this.bullot5, this.playerFrappeRate, null, this);
+            this.perleB5 = this.physics.add.sprite(0, 6200, 'perle');
+            this.physics.add.collider(this.player, this.perleB5, this.playerPerle, null, this);
+            this.soinB5 = this.physics.add.sprite(0, 6200, 'soin');
+            this.physics.add.collider(this.player, this.soinB5, this.playerSoin, null, this);
+            this.bullot5.perle = this.perleB5;
+            this.bullot5.soin = this.soinB5;
+        }
 
-        //collider bulles avec ennemis
+        {
+            this.bullot6 = this.physics.add.sprite(5530, 3170+128+128, 'bullot');
+            this.bullot6.body.immovable = true;
+            this.physics.add.collider(this.player, this.bullot6, this.playerHitR, null, this);
+            this.physics.add.overlap(this.epee, this.bullot6, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.epee2, this.bullot6, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.pince, this.bullot6, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.pince2, this.bullot6, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles1, this.bullot6, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles2, this.bullot6, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles3, this.bullot6, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles4, this.bullot6, this.playerFrappeRate, null, this);
+            this.perleB6 = this.physics.add.sprite(0, 6200, 'perle');
+            this.physics.add.collider(this.player, this.perleB6, this.playerPerle, null, this);
+            this.soinB6 = this.physics.add.sprite(0, 6200, 'soin');
+            this.physics.add.collider(this.player, this.soinB6, this.playerSoin, null, this);
+            this.bullot6.perle = this.perleB6;
+            this.bullot6.soin = this.soinB6;
+        }
+    }
+        //creation d'autants de perles et de coeurs que d'ennemis
+
+
+
+
+
+
+
+
 
 
         //cursors
@@ -184,18 +359,7 @@ class village extends Phaser.Scene {
 
 
 
-
-
-console.log(this.vieActuelle)
-        this.vieActuelle = 10
-        this.vieMax = 10
-
-        console.log(this.vieActuelle)
-
-
-
-
-
+        //path des ennemis qui bougent
 
         this.path1 = new Phaser.Curves.Path(2300, 2700);
         this.path1.splineTo([1850, 2650, 1850, 2370, 2180, 2370, 2330, 2560, 2300, 2700]);
@@ -204,6 +368,19 @@ console.log(this.vieActuelle)
         this.follow1.setScale(0.1);
         this.follow1.startFollow({
             duration: 6000,
+            repeat: -1,
+            rotateToPath: true,
+            verticalAdjust: true
+        });
+
+
+        this.path2 = new Phaser.Curves.Path(830, 1728);
+        this.path2.splineTo([830, 2500]);
+        this.follow2 = this.add.follower(this.path2, 830, 1728);
+        this.follow2.setScale(0.1);
+        this.follow2.startFollow({
+            duration: 5000,
+            yoyo:true,
             repeat: -1,
             rotateToPath: true,
             verticalAdjust: true
@@ -446,10 +623,10 @@ console.log(this.vieActuelle)
 
         this.physics.add.overlap(this.player, this.courant, this.moveForce, null, this);
 
-        /*
+        
                 this.graphics.lineStyle(2, 0xffffff, 1);
-                this.path.draw(this.graphics);
-        */
+                this.path2.draw(this.graphics);
+        
 
     }
 
@@ -457,14 +634,20 @@ console.log(this.vieActuelle)
 
 
 
-        //mouvement de l'ui avec le joueur
-        this.ui.x = this.player.x - 400;
-        this.ui.y = this.player.y - 230;
+        this.comptPerle.setText(this.counterPerle)
+
+        //game over
+        if (this.vieActuelle <= 0) {
+            console.log("change")
+            this.scene.start("menu", { etat: true });
+        }
+
+
 
 
         //param des téléporteurs de scenes
-        if (this.player.x > 3000) {
-            this.scene.start("plaines");
+        if (this.player.x > 6330) {
+            this.scene.start("plaines", { origin: this.origine, powerup2: this.powerup2, powerup3: this.powerup3, vieA: this.vieActuelle, vieM: this.vieMax, counterPerle:this.counterPerle });
         }
 
         //affichage des attaques
@@ -520,7 +703,7 @@ console.log(this.vieActuelle)
         }
 
 
-        if (this.keyZ.isDown && this.attk) {
+        if (this.keyZ.isDown && this.attk && this.powerup2) {
             this.attk = false;
             this.cursors.right.reset();
             this.cursors.left.reset();
@@ -568,7 +751,7 @@ console.log(this.vieActuelle)
             }, 600);
         }
 
-        if (this.keyE.isDown && this.attk) {
+        if (this.keyE.isDown && this.attk && this.powerup3) {
             this.attk = false;
             this.cursors.right.reset();
             this.cursors.left.reset();
@@ -759,58 +942,71 @@ console.log(this.vieActuelle)
             }, 300);
         }
 
-        //degats pris
-
 
 
 
         //mouvements de ennemis
         this.requin1.x = this.follow1.x
         this.requin1.y = this.follow1.y
+        this.requin2.x = this.follow2.x
+        this.requin2.y = this.follow2.y
 
         //touches de controlex
         {
-            if (this.cursors.left.isDown) { //si la touche gauche est appuyée
-                this.player.setVelocityX(-300); //alors vitesse négative en X
+            if (this.cursors.left.isDown && this.courantActif == false) {
+                this.player.setVelocityX(-300);
                 this.player.anims.play('left', true);
                 this.lastFacingDirection = "left"
-                //   this.player.setSize(64, 32, true);
-                // this.player.setOffset(2, 17);
-                //this.courant.anims.play('coura', true);
+
             }
-            else if (this.cursors.right.isDown) { //sinon si la touche droite est appuyée
-                this.player.setVelocityX(300); //alors vitesse positive en X
-                this.player.anims.play('right', true); //et animation => droite
+            else if (this.cursors.right.isDown && this.courantActif == false) {
+                this.player.setVelocityX(300);
+                this.player.anims.play('right', true);
                 this.lastFacingDirection = "right"
-                //  this.player.setSize(64, 32, true);
-                //this.player.setOffset(2, 17);
+
             }
-            else { // sinon
-                this.player.setVelocityX(0); //vitesse nulle
+            else if (this.courantActif == false) {
+                this.player.setVelocityX(0);
             }
 
 
-            if (this.cursors.up.isDown) { //sinon si la touche droite est appuyée
-                this.player.setVelocityY(-300); //alors vitesse positive en X
-                this.player.anims.play('up', true); //et animation => droite
+            if (this.cursors.up.isDown && this.courantActif == false) {
+                this.player.setVelocityY(-300);
+                this.player.anims.play('up', true);
                 this.lastFacingDirection = "up";
 
 
             }
-            else if (this.cursors.down.isDown) { //sinon si la touche droite est appuyée
-                this.player.setVelocityY(350); //alors vitesse positive en X
-                this.player.anims.play('down', true); //et animation => droite
+            else if (this.cursors.down.isDown && this.courantActif == false) {
+                this.player.setVelocityY(350);
+                this.player.anims.play('down', true);
                 this.lastFacingDirection = "down";
 
 
             }
-            else { // sinon
-                this.player.setVelocityY(0); //vitesse nulle
+            else if (this.courantActif == false) {
+                this.player.setVelocityY(0);
             }
 
-            if (this.cursors.up.isDown && this.cursors.left.isDown) {
+            if (this.cursors.up.isDown && this.cursors.left.isDown && this.courantActif == false) {
                 //ajouter anim diagonales si j'ai le temps
-                console.log("diag")
+                this.player.anims.play('up', true); //et animation => droite
+
+            }
+            else if (this.cursors.up.isDown && this.cursors.right.isDown && this.courantActif == false) {
+                //ajouter anim diagonales si j'ai le temps
+                this.player.anims.play('up', true); //et animation => droite
+
+            }
+            else if (this.cursors.down.isDown && this.cursors.left.isDown && this.courantActif == false) {
+                //ajouter anim diagonales si j'ai le temps
+                this.player.anims.play('down', true); //et animation => droite
+
+            }
+            else if (this.cursors.down.isDown && this.cursors.right.isDown && this.courantActif == false) {
+                //ajouter anim diagonales si j'ai le temps
+                this.player.anims.play('down', true); //et animation => droite
+
             }
 
         }
@@ -949,12 +1145,24 @@ console.log(this.vieActuelle)
     }
 
     moveForce() {
-        console.log(this.vieMax)
-        /*
-                setTimeout(() => {
-                    this.cursors.right.reset();
-                }, 300);
-        */
+
+
+        this.player.setVelocityX(0)
+        this.player.setVelocityY(0)
+        this.cursors.right.reset();
+        this.cursors.left.reset();
+        this.cursors.up.reset();
+        this.cursors.down.reset();
+        this.cursors.enabled = false;
+        this.courantActif = true
+        this.player.setVelocityX(1000)
+
+        setTimeout(() => {
+            this.courantActif = false
+            this.player.setVelocityX(0)
+            this.cursors.enabled = true;
+
+        }, 1000);
 
 
     }
@@ -965,7 +1173,7 @@ console.log(this.vieActuelle)
             this.degatsPris = true;
             player.setTint(0xff0000);
             this.vieActuelle = this.vieActuelle - 1
-
+            player.scene.cameras.main.shake(500, 0.005);
 
 
             setTimeout(() => {
@@ -979,14 +1187,40 @@ console.log(this.vieActuelle)
 
 
     playerFrappeR(player, requin) {
-        console.log("touche requin avec épée")
-        this.drop = true;
-        console.log(player.x)
+        this.value = Phaser.Math.Between(0, 10);
+
+        if (this.value <= 5) {
+            requin.perle.x = requin.x
+            requin.perle.y = requin.y
+        }
+
+        if (6 <= this.value >= 8) {
+            requin.soin.x = requin.x
+            requin.soin.y = requin.y
+
+        }
         requin.destroy();
+
     }
 
 
+    playerPerle(player, perle) {
 
+        perle.x = 0
+        perle.y = 6200
+        this.counterPerle++
+
+
+    }
+
+    playerSoin(player, soin) {
+        soin.x = 0
+        soin.y = 6200
+        console.log(this.vieActuelle)
+        if (this.vieActuelle < 10) {
+            this.vieActuelle = this.vieActuelle + 1
+        }
+    }
 
 
 

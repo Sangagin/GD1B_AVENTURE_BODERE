@@ -16,6 +16,7 @@
 <body>
     <script src="plaines.js"></script>
     <script src="village.js"></script>
+    <script src="gameOver.js"></script>
     <script src="gestionUI.js"></script>
     <script type="text/javascript">
 
@@ -28,12 +29,18 @@
                 super("menu");
             }
 
+            init(data) {
+                console.log('init', data);
+        
+                this.mort = data.etat;
+            }
 
             preload() {
 
                 this.load.spritesheet('perso', 'assets/sprites/Sprite_fish_01.png',
                     { frameWidth: 64, frameHeight: 62 });
                 this.load.image('fondmenu', 'assets/UI/menu.png');
+                this.load.image('fondGO', 'assets/UI/gameOver.png');
                 this.load.image('bouttonStart', 'assets/UI/boutonS.png');
                 this.load.image('bouttonQ', 'assets/UI/boutonQ.png');
                 this.load.image("place", "assets/tilesetPlaceholder.png");
@@ -46,29 +53,44 @@
 
             create() {
 
-                this.powerup2=false;
-                this.powerup3=false;
-                this.vieActuelle=2;
-                this.vieMax=2;
+                //variables du perso de base
+                this.powerup2 = true;
+                this.powerup3 = true;
+                this.vieActuelle = 2;
+                this.vieMax = 2;
+                this.origine = "menu"
+                this.counterPerle = 0;
+
+                //si premiere charge
+
+                //this.player = this.physics.add.sprite(900, 4000, 'perso');
 
 
+                if (!this.mort) {
                 this.fond = this.add.image(640, 720 / 2, 'fondmenu');
                 this.fond.setScale(0.3)
-                this.buttonS = this.add.sprite(660, 360 + 20, 'bouttonStart').setInteractive();
-                this.buttonS.setScale(0.28)
-                this.buttonQ = this.add.sprite(660, 500, 'bouttonQ').setInteractive();
-                this.buttonQ.setScale(0.28)
+                
+                    this.buttonS = this.add.sprite(660, 360 + 20, 'bouttonStart').setInteractive();
+                    this.buttonS.setScale(0.28)
+                    this.buttonQ = this.add.sprite(660, 500, 'bouttonQ').setInteractive();
+                    this.buttonQ.setScale(0.28)
 
-                console.log(this.powerup2)
-                this.buttonS.on('pointerdown', function () {
-                    this.scene.scene.start('village',{powerup2:this.scene.powerup2,vieA:this.scene.vieActuelle,vieM:this.scene.vieMax});
-                });
+                    this.buttonS.on('pointerdown', function () {
+                        this.scene.scene.start('village', { origin:this.scene.origine,powerup2: this.scene.powerup2,powerup3: this.scene.powerup3, vieA: this.scene.vieActuelle, vieM: this.scene.vieMax,counterPerle: this.scene.counterPerle });
+                    });
 
-                this.buttonQ.on('pointerup', function () {
-                    this.scene.scene.start('village',{powerup:this.powerup2});
-                });
+                    this.buttonQ.on('pointerup', function () {
+                        this.scene.scene.start('village', { powerup: this.powerup2 });
+                    });
 
+                }
 
+                //sinon c'est que c'est un game over
+                else{
+                    this.fond = this.add.image(640, 720 / 2, 'fondGO');
+                    this.fond.setScale(0.3)
+
+                }
 
             }
 
@@ -85,7 +107,7 @@
         }
 
 
-        
+
 
 
 
