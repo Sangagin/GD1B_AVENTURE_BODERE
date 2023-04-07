@@ -125,6 +125,8 @@ class village extends Phaser.Scene {
             this.player = this.physics.add.sprite(3720, 6200, 'perso');
 
         }
+        this.player.setScale(1.2)
+        this.player.setSize(45,45)
 
         this.origine = "village"
 
@@ -136,19 +138,19 @@ class village extends Phaser.Scene {
         this.physics.world.setBounds(0, 0, 6400, 6400);
         this.cameras.main.setBounds(0, 0, 6400, 6400);
         this.cameras.main.startFollow(this.player);
-        this.cameras.main.setZoom(1);
+        this.cameras.main.setZoom(0.8);
 
         //affichage UI
-        this.ui = this.physics.add.sprite(235, 130, 'UI1');
-        this.ui.setScale(0.8)
+        this.ui = this.physics.add.sprite(130, 80, 'UI1');
+       // this.ui.setScale(0.8)
         this.ui.depth = 2;
         this.ui.setScrollFactor(0)
 
         //compteur monnaie
-        this.comptPerle = this.add.text(135, 195, '0', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif', fontSize: 30 });
+        this.comptPerle = this.add.text(10, 160, '0', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif', fontSize: 30 });
         this.comptPerle.depth = 4
         this.comptPerle.setScrollFactor(0);
-        this.comptPerle.setScale(0.8)
+        //this.comptPerle.setScale(0.8)
 
 
 
@@ -172,6 +174,25 @@ class village extends Phaser.Scene {
 
         //création ennemis
         {
+            {
+                this.requin0 = this.physics.add.sprite(2110, 3900, 'requin');
+                this.requin0.body.immovable = true;
+                this.physics.add.collider(this.player, this.requin0, this.playerHitR, null, this);
+                this.physics.add.overlap(this.epee, this.requin0, this.playerFrappeR, null, this);
+                this.physics.add.overlap(this.epee2, this.requin0, this.playerFrappeR, null, this);
+                this.physics.add.overlap(this.pince, this.requin0, this.playerFrappeR, null, this);
+                this.physics.add.overlap(this.pince2, this.requin0, this.playerFrappeR, null, this);
+                this.physics.add.overlap(this.bulles1, this.requin0, this.playerFrappeR, null, this);
+                this.physics.add.overlap(this.bulles2, this.requin0, this.playerFrappeR, null, this);
+                this.physics.add.overlap(this.bulles3, this.requin0, this.playerFrappeR, null, this);
+                this.physics.add.overlap(this.bulles4, this.requin0, this.playerFrappeR, null, this);
+                this.perleR0 = this.physics.add.sprite(0, 6200, 'perle');
+                this.physics.add.collider(this.player, this.perleR0, this.playerPerle, null, this);
+                this.soinR0 = this.physics.add.sprite(0, 6200, 'soin');
+                this.physics.add.collider(this.player, this.soinR0, this.playerSoin, null, this);
+                this.requin0.perle = this.perleR0;
+                this.requin0.soin = this.soinR0;
+            }
         {
             this.requin1 = this.physics.add.sprite(1200, 3800, 'requin');
             this.requin1.body.immovable = true;
@@ -210,6 +231,27 @@ class village extends Phaser.Scene {
             this.requin2.perle = this.perleR2;
             this.requin2.soin = this.soinR2;
         }
+
+        {
+            this.requin3 = this.physics.add.sprite(4100, 4900, 'requin');
+            this.requin3.body.immovable = true;
+            this.physics.add.collider(this.player, this.requin3, this.playerHitR, null, this);
+            this.physics.add.overlap(this.epee, this.requin3, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.epee2, this.requin3, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.pince, this.requin3, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.pince2, this.requin3, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles1, this.requin3, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles2, this.requin3, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles3, this.requin3, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles4, this.requin3, this.playerFrappeR, null, this);
+            this.perleR3 = this.physics.add.sprite(0, 6200, 'perle');
+            this.physics.add.collider(this.player, this.perleR3, this.playerPerle, null, this);
+            this.soinR3 = this.physics.add.sprite(0, 6200, 'soin');
+            this.physics.add.collider(this.player, this.soinR3, this.playerSoin, null, this);
+            this.requin3.perle = this.perleR3;
+            this.requin3.soin = this.soinR3;
+        }
+
 
         {
             this.bullot1 = this.physics.add.sprite(1375, 3680, 'bullot');
@@ -327,6 +369,111 @@ class village extends Phaser.Scene {
             this.bullot6.perle = this.perleB6;
             this.bullot6.soin = this.soinB6;
         }
+
+        {
+            this.bullot7 = this.physics.add.sprite(4450, 3620, 'bullot');
+            this.bullot7.body.immovable = true;
+            this.physics.add.collider(this.player, this.bullot7, this.playerHitR, null, this);
+            this.physics.add.overlap(this.epee, this.bullot7, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.epee2, this.bullot7, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.pince, this.bullot7, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.pince2, this.bullot7, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles1, this.bullot7, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles2, this.bullot7, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles3, this.bullot7, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles4, this.bullot7, this.playerFrappeRate, null, this);
+            this.perleB7 = this.physics.add.sprite(0, 6200, 'perle');
+            this.physics.add.collider(this.player, this.perleB7, this.playerPerle, null, this);
+            this.soinB7 = this.physics.add.sprite(0, 6200, 'soin');
+            this.physics.add.collider(this.player, this.soinB7, this.playerSoin, null, this);
+            this.bullot7.perle = this.perleB7;
+            this.bullot7.soin = this.soinB7;
+        }
+
+
+        {
+            this.bullot8 = this.physics.add.sprite(4200, 3940, 'bullot');
+            this.bullot8.body.immovable = true;
+            this.physics.add.collider(this.player, this.bullot8, this.playerHitR, null, this);
+            this.physics.add.overlap(this.epee, this.bullot8, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.epee2, this.bullot8, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.pince, this.bullot8, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.pince2, this.bullot8, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles1, this.bullot8, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles2, this.bullot8, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles3, this.bullot8, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles4, this.bullot8, this.playerFrappeRate, null, this);
+            this.perleB8 = this.physics.add.sprite(0, 6200, 'perle');
+            this.physics.add.collider(this.player, this.perleB8, this.playerPerle, null, this);
+            this.soinB8 = this.physics.add.sprite(0, 6200, 'soin');
+            this.physics.add.collider(this.player, this.soinB8, this.playerSoin, null, this);
+            this.bullot8.perle = this.perleB8;
+            this.bullot8.soin = this.soinB8;
+        }
+
+
+        {
+            this.bullot9 = this.physics.add.sprite(3615, 4330, 'bullot');
+            this.bullot9.body.immovable = true;
+            this.physics.add.collider(this.player, this.bullot9, this.playerHitR, null, this);
+            this.physics.add.overlap(this.epee, this.bullot9, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.epee2, this.bullot9, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.pince, this.bullot9, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.pince2, this.bullot9, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles1, this.bullot9, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles2, this.bullot9, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles3, this.bullot9, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles4, this.bullot9, this.playerFrappeRate, null, this);
+            this.perleB9 = this.physics.add.sprite(0, 6200, 'perle');
+            this.physics.add.collider(this.player, this.perleB9, this.playerPerle, null, this);
+            this.soinB9 = this.physics.add.sprite(0, 6200, 'soin');
+            this.physics.add.collider(this.player, this.soinB9, this.playerSoin, null, this);
+            this.bullot9.perle = this.perleB9;
+            this.bullot9.soin = this.soinB9;
+        }
+
+
+        {
+            this.bullot10 = this.physics.add.sprite(3680, 4420, 'bullot');
+            this.bullot10.body.immovable = true;
+            this.physics.add.collider(this.player, this.bullot10, this.playerHitR, null, this);
+            this.physics.add.overlap(this.epee, this.bullot10, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.epee2, this.bullot10, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.pince, this.bullot10, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.pince2, this.bullot10, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles1, this.bullot10, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles2, this.bullot10, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles3, this.bullot10, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles4, this.bullot10, this.playerFrappeRate, null, this);
+            this.perleB10 = this.physics.add.sprite(0, 6200, 'perle');
+            this.physics.add.collider(this.player, this.perleB10, this.playerPerle, null, this);
+            this.soinB10 = this.physics.add.sprite(0, 6200, 'soin');
+            this.physics.add.collider(this.player, this.soinB10, this.playerSoin, null, this);
+            this.bullot10.perle = this.perleB10;
+            this.bullot10.soin = this.soinB10;
+        }
+
+
+        {
+            this.bullot11 = this.physics.add.sprite(3580, 4650, 'bullot');
+            this.bullot11.body.immovable = true;
+            this.physics.add.collider(this.player, this.bullot11, this.playerHitR, null, this);
+            this.physics.add.overlap(this.epee, this.bullot11, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.epee2, this.bullot11, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.pince, this.bullot11, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.pince2, this.bullot11, this.playerFrappeR, null, this);
+            this.physics.add.overlap(this.bulles1, this.bullot11, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles2, this.bullot11, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles3, this.bullot11, this.playerFrappeRate, null, this);
+            this.physics.add.overlap(this.bulles4, this.bullot11, this.playerFrappeRate, null, this);
+            this.perleB11 = this.physics.add.sprite(0, 6200, 'perle');
+            this.physics.add.collider(this.player, this.perleB11, this.playerPerle, null, this);
+            this.soinB11 = this.physics.add.sprite(0, 6200, 'soin');
+            this.physics.add.collider(this.player, this.soinB11, this.playerSoin, null, this);
+            this.bullot11.perle = this.perleB11;
+            this.bullot11.soin = this.soinB11;
+        }
+
     }
         //creation d'autants de perles et de coeurs que d'ennemis
 
@@ -379,6 +526,19 @@ class village extends Phaser.Scene {
         this.follow2 = this.add.follower(this.path2, 830, 1728);
         this.follow2.setScale(0.1);
         this.follow2.startFollow({
+            duration: 5000,
+            yoyo:true,
+            repeat: -1,
+            rotateToPath: true,
+            verticalAdjust: true
+        });
+
+
+        this.path3 = new Phaser.Curves.Path(4100, 4900);
+        this.path3.splineTo([4420, 5290]);
+        this.follow3 = this.add.follower(this.path3, 4100, 4900);
+        this.follow3.setScale(0.1);
+        this.follow3.startFollow({
             duration: 5000,
             yoyo:true,
             repeat: -1,
@@ -625,7 +785,7 @@ class village extends Phaser.Scene {
 
         
                 this.graphics.lineStyle(2, 0xffffff, 1);
-                this.path2.draw(this.graphics);
+               // this.path3.draw(this.graphics);
         
 
     }
@@ -648,6 +808,10 @@ class village extends Phaser.Scene {
         //param des téléporteurs de scenes
         if (this.player.x > 6330) {
             this.scene.start("plaines", { origin: this.origine, powerup2: this.powerup2, powerup3: this.powerup3, vieA: this.vieActuelle, vieM: this.vieMax, counterPerle:this.counterPerle });
+        }
+
+        if (this.player.x > 100) {
+            this.scene.start("donjon1",{ origin: this.origine, powerup2: this.powerup2, powerup3: this.powerup3, vieA: this.vieActuelle, vieM: this.vieMax, counterPerle:this.counterPerle });
         }
 
         //affichage des attaques
@@ -950,6 +1114,8 @@ class village extends Phaser.Scene {
         this.requin1.y = this.follow1.y
         this.requin2.x = this.follow2.x
         this.requin2.y = this.follow2.y
+        this.requin3.x = this.follow3.x
+        this.requin3.y = this.follow3.y
 
         //touches de controlex
         {

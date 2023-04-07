@@ -1,27 +1,27 @@
-class plaines extends Phaser.Scene {
+class donjon1 extends Phaser.Scene {
 
     constructor() {
-        super("plaines");
+        super("donjon1");
     }
-
     init(data) {
         console.log('init', data);
-        this.origine=data.origin
+        this.origine = data.origin
         this.powerup2 = data.powerup2;
         this.powerup3 = data.powerup3;
         this.vieActuelle = data.vieA;
         this.vieMax = data.vieM;
-        this.counterPerle=data.counterPerle
+        this.counterPerle = data.counterPerle
 
     }
+
 
     preload() {
 
         this.load.spritesheet('perso', 'assets/sprites/Sprite_fish_01.png',
             { frameWidth: 64, frameHeight: 62 });
 
-        this.load.image("tilePlaine", "assets/tileset.png");
-        this.load.tilemapTiledJSON("cartePlaines", "assets/maps/map_plaines.json");
+        this.load.image("tileDJ1", "assets/tileset.png");
+        this.load.tilemapTiledJSON("carteDJ1", "assets/maps/map_donjon1.json");
 
         if (this.powerup3) {
             this.load.spritesheet('UI1', 'assets/UI/UI_3.png',
@@ -50,75 +50,72 @@ class plaines extends Phaser.Scene {
 
     create() {
 
-        const carteDuNiveauPlaines = this.add.tilemap("cartePlaines");
+        const carteDuNiveauDonjon1 = this.add.tilemap("carteDJ1");
 
-        const tilesetPlaine = carteDuNiveauPlaines.addTilesetImage(
-            "tilesetPlaceholder",
-            "tilePlaine"
+        const tilesetDJ1 = carteDuNiveauDonjon1.addTilesetImage(
+            "tileset",
+            "tileDJ1"
         );
 
 
 
         //il s'appelle calque pic mais c'est surtout celui avec la lave
-        const calque_sol_plaines = carteDuNiveauPlaines.createLayer(
-            "sol",
-            tilesetPlaine
+        const calque_sol_DJ1 = carteDuNiveauDonjon1.createLayer(
+            "sol_donj1",
+            tilesetDJ1
         );
 
-        const calque__sous_murs_plaines = carteDuNiveauPlaines.createLayer(
-            "sous_mur",
-            tilesetPlaine
+
+
+        const calque_murs_donjon1 = carteDuNiveauDonjon1.createLayer(
+            "murs_donj1",
+            tilesetDJ1
         );
 
-        const calque_murs_plaines = carteDuNiveauPlaines.createLayer(
-            "murs",
-            tilesetPlaine
-        );
-
-        const calque_cailloux_plaines = carteDuNiveauPlaines.createLayer(
-            "cailloux",
-            tilesetPlaine
+        const calque_obstacles_DJ1 = carteDuNiveauDonjon1.createLayer(
+            "obstacles",
+            tilesetDJ1
         );
 
 
 
 
-        calque_murs_plaines.setCollisionByProperty({ EstSolide: true });
+        calque_murs_donjon1.setCollisionByProperty({ EstSolide: true });
 
 
 
-        if (this.origine == "village") {
+        this.salleActuelleDJ1 = 1
+        //plus simple en fonction
+        this.transitionSalle = false
 
 
-            this.player = this.physics.add.sprite(360, 2900, 'perso');
-        }
+        this.player = this.physics.add.sprite(1650, 570, 'perso');
 
-        else {
-            this.player = this.physics.add.sprite(6050, 4960, 'perso');
 
-        }
+
         this.player.setScale(1.2)
-        this.player.setSize(45,45)
+        this.player.setSize(45, 45)
 
-        this.origine="plaines"
-
-
-        this.physics.add.collider(this.player, calque_murs_plaines);
+        this.origine = "donjon1"
 
 
-        this.physics.world.setBounds(0, 0, 6400, 6400);
+        this.physics.add.collider(this.player, calque_murs_donjon1);
+
+
+        this.physics.world.setBounds(0, 0, 9000, 9000);
         //  ajout du champs de la caméra de taille identique à celle du monde
-        this.cameras.main.setBounds(0, 0, 6400, 6400);
-        // ancrage de la caméra sur le joueur
-        this.cameras.main.startFollow(this.player);
-        this.cameras.main.setZoom(0.8);
+        this.cameras.main.setBounds(0, 0, 9000, 9000);
+        this.cameras.main.centerOn(1650, 570)
+
+
+        this.cameras.main.setZoom(0.6)
 
 
 
         this.cursors = this.input.keyboard.createCursorKeys();
         this.lastFacingDirection = "right"
 
-
+        this.player.x = 1150
 
 
         this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
@@ -126,13 +123,13 @@ class plaines extends Phaser.Scene {
         this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 
         //affichage UI
-        this.ui = this.physics.add.sprite(130, 80, 'UI1');
-       // this.ui.setScale(0.8)
+        this.ui = this.physics.add.sprite(-100, -80, 'UI1');
+        // this.ui.setScale(0.8)
         this.ui.depth = 2;
         this.ui.setScrollFactor(0)
 
         //compteur monnaie
-        this.comptPerle = this.add.text(10, 160, '0', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif', fontSize: 30 });
+        this.comptPerle = this.add.text(-120, 0, '0', { fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif', fontSize: 30 });
         this.comptPerle.depth = 4
         this.comptPerle.setScrollFactor(0);
         //this.comptPerle.setScale(0.8)
@@ -407,17 +404,166 @@ class plaines extends Phaser.Scene {
             this.scene.start("menu", { etat: true });
         }
 
-//param des changemetns de scene
-        if (this.player.x < 100) {
-            this.scene.start("village", { origin: this.origine, powerup2: this.powerup2, powerup3: this.powerup3, vieA: this.vieActuelle, vieM: this.vieMax, counterPerle:this.counterPerle });
+
+        //param des changemetns de salles
+        {
+            //de 1 vers 2
+            if ((this.player.x < 2360 && this.player.x > 2160) && (this.player.y < 630 && this.player.y > 450)) {
+
+
+                this.cameras.main.centerOn(4126, 790)
+                this.player.x = 3620
+                this.player.y = 770
+            }
+
+
+            //de 2 vers 1
+            if ((this.player.x < 3580 && this.player.x > 3510) && (this.player.y < 815 && this.player.y > 650)) {
+
+                this.cameras.main.centerOn(1650, 570)
+
+                this.player.x = 2110
+                this.player.y = 570
+
+            }
+
+
+            //de 2 vers 3
+            if ((this.player.x < 4750 && this.player.x > 4676) && (this.player.y < 815 && this.player.y > 650)) {
+                this.cameras.main.centerOn(6570, 570)
+
+                this.player.x = 6050
+                this.player.y = 570
+            }
+
+            //de 3 vers 2
+            if ((this.player.x < 6015 && this.player.x > 5900) && (this.player.y < 630 && this.player.y > 450)) {
+                this.player.y = 790
+                this.cameras.main.centerOn(4126, 790)
+
+                this.player.x = 4600
+            }
+
+
+
+            //de 3 vers 4
+            if ((this.player.x < 6640 && this.player.x > 6470) && (this.player.y < 1030 && this.player.y > 960)) {
+                this.player.x = 1634
+                this.player.y = 3128
+                this.cameras.main.centerOn(1630, 3460)
+
+            }
+            //de 4 vers 3
+            if ((this.player.x < 1700 && this.player.x > 1550) && (this.player.y < 3070 && this.player.y > 3000)) {
+                this.cameras.main.centerOn(6570, 570)
+                this.player.x = 6550
+                this.player.y = 890
+
+            }
+            //de 4 vers 5
+            if ((this.player.x < 2270 && this.player.x > 2170) && (this.player.y < 3500 && this.player.y > 3360)) {
+                this.cameras.main.centerOn(4124, 3650)
+                this.player.x = 3650
+                this.player.y = 3600
+
+            }
+
+
+//de 4 vers 7
+            if ((this.player.x < 1700 && this.player.x > 1550) && (this.player.y < 3960 && this.player.y > 3840)) {
+                this.cameras.main.centerOn(4060, 5380)
+                this.player.x = 4090
+                this.player.y = 5044
+
+            }
+
+
+                        //de 5 vers 4
+            if ((this.player.x < 3585 && this.player.x > 3480) && (this.player.y < 3670 && this.player.y > 3540)) {
+                this.cameras.main.centerOn(1630, 3460)
+                this.player.x = 2090
+                this.player.y = 3450
+
+            }
+
+                                    //de 5 vers 6
+            if ((this.player.x < 4800 && this.player.x > 4680) && (this.player.y < 3670 && this.player.y > 3540)) {
+                this.cameras.main.centerOn(6563, 3455)
+                this.player.x = 6064
+                this.player.y = 3450
+
+            }
+
+            //de 6 vers 5
+            if ((this.player.x < 6020 && this.player.x > 5900) && (this.player.y < 3550 && this.player.y > 3330)) {
+                this.cameras.main.centerOn(4124, 3650)
+                this.player.x = 4590
+                this.player.y = 3650
+
+            }  
+
+
+            //de 7 vers 4
+            if ((this.player.x < 4150 && this.player.x > 3930) && (this.player.y < 4980 && this.player.y > 4880)) {
+                this.cameras.main.centerOn(1630, 3460)
+                this.player.x = 1630
+                this.player.y = 3740
+
+            }
+
+
+            //de 7 vers 8
+            if ((this.player.x < 4150 && this.player.x > 3930) && (this.player.y < 5880 && this.player.y > 5758)) {
+                this.cameras.main.centerOn(1630, 2050)
+                this.player.x = 1630
+                this.player.y = 1730
+
+            }
+
+                        //de 8 vers 7
+            if ((this.player.x < 1700 && this.player.x > 1550) && (this.player.y < 1660 && this.player.y > 1550)) {
+                this.cameras.main.centerOn(4060, 5380)
+                this.player.x = 4090
+                this.player.y = 5680
+
+            }
+
+            //de 8 vers 9
+            if ((this.player.x < 1700 && this.player.x > 1550) && (this.player.y < 2550 && this.player.y > 2430)) {
+                this.cameras.main.centerOn(6430, 7680)
+                this.player.x = 6430
+                this.player.y = 7360
+            }
+            //de 9 vers 8
+            if ((this.player.x < 6550 && this.player.x > 6350) && (this.player.y < 7295 && this.player.y > 7188)) {
+                this.cameras.main.centerOn(1630, 2050)
+                this.player.x = 1630
+                this.player.y = 2350
+            }
+            //de 9 vers 10
+            if ((this.player.x < 7100 && this.player.x > 6980) && (this.player.y < 7730 && this.player.y > 7550)) {
+                this.cameras.main.centerOn(4130, 2230)
+                this.player.x = 3650
+                this.player.y = 2230
+            }
+
+            //de 10 vers 9
+            if ((this.player.x < 3580 && this.player.x > 3450) && (this.player.y < 2280 && this.player.y > 2126)) {
+                this.cameras.main.centerOn(6430, 7680)
+                this.player.x = 6900
+                this.player.y = 7680
+            }
+
+
+            //de 9 vers 13
+
+            //de 10 vers 11
+
+
         }
-        if (this.player.x > 4890) {
-            this.scene.start("donjon1", { origin: this.origine, powerup2: this.powerup2, powerup3: this.powerup3, vieA: this.vieActuelle, vieM: this.vieMax, counterPerle:this.counterPerle });
-        }
+
 
         //affichage des attaques
-
-
 
         if (this.keyA.isDown && this.attk) {
             this.attk = false;
@@ -538,6 +684,13 @@ class plaines extends Phaser.Scene {
                     this.bulles1.setVelocityX(350);
                     this.bulles1.setVelocityY(0);
                     this.bulleUtil = this.bulleUtil + 1
+                    setTimeout(() => {
+                        this.bulles1.x = 0;
+                        this.bulles1.y = 7000;
+                        this.bulles1.setVelocityX(0);
+                        this.bulles1.setVelocityY(0);
+
+                    }, 4000);
                 }
                 else if (this.bulleUtil == 1) {
                     this.bulles2.x = this.player.x + 70 + 64
@@ -546,6 +699,13 @@ class plaines extends Phaser.Scene {
                     this.bulles2.setVelocityX(350);
                     this.bulles2.setVelocityY(0);
                     this.bulleUtil++
+                    setTimeout(() => {
+                        this.bulles2.x = 0;
+                        this.bulles2.y = 7000;
+                        this.bulles2.setVelocityX(0);
+                        this.bulles2.setVelocityY(0);
+
+                    }, 4000);
                 }
                 else if (this.bulleUtil == 2) {
                     this.bulles3.x = this.player.x + 70 + 64
@@ -554,6 +714,13 @@ class plaines extends Phaser.Scene {
                     this.bulles3.setVelocityX(350);
                     this.bulles3.setVelocityY(0);
                     this.bulleUtil++
+                    setTimeout(() => {
+                        this.bulles3.x = 0;
+                        this.bulles3.y = 7000;
+                        this.bulles3.setVelocityX(0);
+                        this.bulles3.setVelocityY(0);
+
+                    }, 4000);
                 }
                 else if (this.bulleUtil == 3) {
                     this.bulles4.x = this.player.x + 70 + 64
@@ -562,6 +729,13 @@ class plaines extends Phaser.Scene {
                     this.bulles4.setVelocityX(350);
                     this.bulles4.setVelocityY(0);
                     this.bulleUtil = 0;
+                    setTimeout(() => {
+                        this.bulles4.x = 0;
+                        this.bulles4.y = 7000;
+                        this.bulles4.setVelocityX(0);
+                        this.bulles4.setVelocityY(0);
+
+                    }, 4000);
                 }
 
 
@@ -580,6 +754,13 @@ class plaines extends Phaser.Scene {
                     this.bulles1.setVelocityX(-350);
                     this.bulles1.setVelocityY(0);
                     this.bulleUtil = this.bulleUtil + 1
+                    setTimeout(() => {
+                        this.bulles1.x = 0;
+                        this.bulles1.y = 7000;
+                        this.bulles1.setVelocityX(0);
+                        this.bulles1.setVelocityY(0);
+
+                    }, 4000);
                 }
                 else if (this.bulleUtil == 1) {
                     this.bulles2.x = this.player.x - 70 - 64
@@ -588,6 +769,13 @@ class plaines extends Phaser.Scene {
                     this.bulles2.setVelocityX(-350);
                     this.bulles2.setVelocityY(0);
                     this.bulleUtil++
+                    setTimeout(() => {
+                        this.bulles2.x = 0;
+                        this.bulles2.y = 7000;
+                        this.bulles2.setVelocityX(0);
+                        this.bulles2.setVelocityY(0);
+
+                    }, 4000);
                 }
                 else if (this.bulleUtil == 2) {
                     this.bulles3.x = this.player.x - 70 - 64
@@ -596,6 +784,13 @@ class plaines extends Phaser.Scene {
                     this.bulles3.setVelocityX(-350);
                     this.bulles3.setVelocityY(0);
                     this.bulleUtil++
+                    setTimeout(() => {
+                        this.bulles3.x = 0;
+                        this.bulles3.y = 7000;
+                        this.bulles3.setVelocityX(0);
+                        this.bulles3.setVelocityY(0);
+
+                    }, 4000);
                 }
                 else if (this.bulleUtil == 3) {
                     this.bulles4.x = this.player.x - 70 - 64
@@ -604,6 +799,13 @@ class plaines extends Phaser.Scene {
                     this.bulles4.setVelocityX(-350);
                     this.bulles4.setVelocityY(0);
                     this.bulleUtil = 0;
+                    setTimeout(() => {
+                        this.bulles4.x = 0;
+                        this.bulles4.y = 7000;
+                        this.bulles4.setVelocityX(0);
+                        this.bulles4.setVelocityY(0);
+
+                    }, 4000);
                 }
 
 
@@ -620,6 +822,13 @@ class plaines extends Phaser.Scene {
                     this.bulles1.setVelocityX(0);
                     this.bulles1.setVelocityY(-350);
                     this.bulleUtil = this.bulleUtil + 1
+                    setTimeout(() => {
+                        this.bulles1.x = 0;
+                        this.bulles1.y = 7000;
+                        this.bulles1.setVelocityX(0);
+                        this.bulles1.setVelocityY(0);
+
+                    }, 3000);
                 }
                 else if (this.bulleUtil == 1) {
                     this.bulles2.x = this.player.x
@@ -628,6 +837,13 @@ class plaines extends Phaser.Scene {
                     this.bulles2.setVelocityX(0);
                     this.bulles2.setVelocityY(-350);
                     this.bulleUtil++
+                    setTimeout(() => {
+                        this.bulles2.x = 0;
+                        this.bulles2.y = 7000;
+                        this.bulles2.setVelocityX(0);
+                        this.bulles2.setVelocityY(0);
+
+                    }, 3000);
                 }
                 else if (this.bulleUtil == 2) {
                     this.bulles3.x = this.player.x
@@ -636,6 +852,13 @@ class plaines extends Phaser.Scene {
                     this.bulles3.setVelocityX(0);
                     this.bulles3.setVelocityY(-350);
                     this.bulleUtil++
+                    setTimeout(() => {
+                        this.bulles3.x = 0;
+                        this.bulles3.y = 7000;
+                        this.bulles3.setVelocityX(0);
+                        this.bulles3.setVelocityY(0);
+
+                    }, 3000);
                 }
                 else if (this.bulleUtil == 3) {
                     this.bulles4.x = this.player.x
@@ -644,6 +867,13 @@ class plaines extends Phaser.Scene {
                     this.bulles4.setVelocityX(0);
                     this.bulles4.setVelocityY(-350);
                     this.bulleUtil = 0;
+                    setTimeout(() => {
+                        this.bulles4.x = 0;
+                        this.bulles4.y = 7000;
+                        this.bulles4.setVelocityX(0);
+                        this.bulles4.setVelocityY(0);
+
+                    }, 3000);
                 }
 
 
@@ -666,6 +896,13 @@ class plaines extends Phaser.Scene {
                     this.bulles1.setVelocityX(0);
                     this.bulles1.setVelocityY(350);
                     this.bulleUtil = this.bulleUtil + 1
+                    setTimeout(() => {
+                        this.bulles1.x = 0;
+                        this.bulles1.y = 7000;
+                        this.bulles1.setVelocityX(0);
+                        this.bulles1.setVelocityY(0);
+
+                    }, 3000);
                 }
                 else if (this.bulleUtil == 1) {
                     this.bulles2.x = this.player.x
@@ -674,6 +911,13 @@ class plaines extends Phaser.Scene {
                     this.bulles2.setVelocityX(0);
                     this.bulles2.setVelocityY(350);
                     this.bulleUtil++
+                    setTimeout(() => {
+                        this.bulles2.x = 0;
+                        this.bulles2.y = 7000;
+                        this.bulles2.setVelocityX(0);
+                        this.bulles2.setVelocityY(0);
+
+                    }, 3000);
                 }
                 else if (this.bulleUtil == 2) {
                     this.bulles3.x = this.player.x
@@ -682,6 +926,13 @@ class plaines extends Phaser.Scene {
                     this.bulles3.setVelocityX(0);
                     this.bulles3.setVelocityY(350);
                     this.bulleUtil++
+                    setTimeout(() => {
+                        this.bulles3.x = 0;
+                        this.bulles3.y = 7000;
+                        this.bulles3.setVelocityX(0);
+                        this.bulles3.setVelocityY(0);
+
+                    }, 3000);
                 }
                 else if (this.bulleUtil == 3) {
                     this.bulles4.x = this.player.x
@@ -690,6 +941,13 @@ class plaines extends Phaser.Scene {
                     this.bulles4.setVelocityX(0);
                     this.bulles4.setVelocityY(350);
                     this.bulleUtil = 0;
+                    setTimeout(() => {
+                        this.bulles4.x = 0;
+                        this.bulles4.y = 7000;
+                        this.bulles4.setVelocityX(0);
+                        this.bulles4.setVelocityY(0);
+
+                    }, 3000);
                 }
 
 
@@ -900,6 +1158,14 @@ class plaines extends Phaser.Scene {
 
 
     }
+
+
+    render() {
+
+        game.debug.cameraInfo(game.camera, 32, 32);
+
+    }
+
 
 
 
