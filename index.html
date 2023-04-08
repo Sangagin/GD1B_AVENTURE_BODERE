@@ -55,11 +55,14 @@
 
                 //variables du perso de base
                 this.powerup2 = true;
-                this.powerup3 = true;
+                this.powerup3 = false;
                 this.vieActuelle = 2;
                 this.vieMax = 2;
                 this.origine = "menu"
                 this.counterPerle = 0;
+                this.boss1vaincu=false;
+                this.boss2vaincu=false;
+                this.boostViePrise=[false,false,false,false]
 
                 //si premiere charge
 
@@ -76,12 +79,13 @@
                     this.buttonQ.setScale(0.28)
 
                     this.buttonS.on('pointerdown', function () {
-                        this.scene.scene.start('village', { origin:this.scene.origine,powerup2: this.scene.powerup2,powerup3: this.scene.powerup3, vieA: this.scene.vieActuelle, vieM: this.scene.vieMax,counterPerle: this.scene.counterPerle });
+                        this.scene.scene.start('village', { origin:this.scene.origine,powerup2: this.scene.powerup2,powerup3: this.scene.powerup3, vieA: this.scene.vieActuelle, vieM: this.scene.vieMax,counterPerle: this.scene.counterPerle,boss1:this.scene.boss1vaincu,boss2:this.scene.boss2vaincu,tabBoostVie:this.scene.boostViePrise});
                     });
 
                     this.buttonQ.on('pointerup', function () {
-                        this.scene.scene.start('village', { powerup: this.powerup2 });
-                    });
+
+                        console.log("quitter")
+                                        });
 
                 }
 
