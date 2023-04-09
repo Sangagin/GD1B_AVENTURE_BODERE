@@ -820,12 +820,16 @@ class village extends Phaser.Scene {
             this.scene.start("plaines", { origin: this.origine, powerup2: this.powerup2, powerup3: this.powerup3, vieA: this.vieActuelle, vieM: this.vieMax, counterPerle: this.counterPerle, boss1: this.boss1vaincu, boss2: this.boss2vaincu,tabBoostVie:this.boostViePrise });
         }
 
-/*
-        //pour tester le donjon 1 immédiatement : décommenter le if qui suit
-        if (this.player.x > 100) {
-            this.scene.start("donjon1", { origin: this.origine, powerup2: this.powerup2, powerup3: this.powerup3, vieA: this.vieActuelle, vieM: this.vieMax, counterPerle: this.counterPerle });
+
+        if (this.player.y > 6320) {
+            this.scene.start("abysses", { origin: this.origine, powerup2: this.powerup2, powerup3: this.powerup3, vieA: this.vieActuelle, vieM: this.vieMax, counterPerle: this.counterPerle ,boss1: this.boss1vaincu, boss2: this.boss2vaincu,tabBoostVie:this.boostViePrise });
         }
-*/
+
+        if(this.player.x>100){
+            this.scene.start("donjon2", { origin: this.origine, powerup2: this.powerup2, powerup3: this.powerup3, vieA: this.vieActuelle, vieM: this.vieMax, counterPerle: this.counterPerle ,boss1: this.boss1vaincu, boss2: this.boss2vaincu,tabBoostVie:this.boostViePrise });
+
+
+        }
 
 
         //affichage des attaques

@@ -1,7 +1,7 @@
-class donjon1 extends Phaser.Scene {
+class donjon2 extends Phaser.Scene {
 
     constructor() {
-        super("donjon1");
+        super("donjon2");
     }
     init(data) {
         console.log('init', data);
@@ -23,14 +23,10 @@ class donjon1 extends Phaser.Scene {
         this.load.spritesheet('perso', 'assets/sprites/Sprite_fish_01.png',
             { frameWidth: 64, frameHeight: 62 });
 
-        this.load.spritesheet('boss_corps', 'assets/sprites/boss_crabe_corps.png',
-            { frameWidth: 512, frameHeight: 256 });
 
-        this.load.spritesheet('boss_pince', 'assets/sprites/boss_crabe_pince.png',
-            { frameWidth: 192, frameHeight: 256 });
 
-        this.load.image("tileDJ1", "assets/tileset.png");
-        this.load.tilemapTiledJSON("carteDJ1", "assets/maps/map_donjon1.json");
+        this.load.image("tileDJ2", "assets/tileset.png");
+        this.load.tilemapTiledJSON("carteDJ2", "assets/maps/map_donjon2.json");
 
         if (this.powerup3) {
             this.load.spritesheet('UI1', 'assets/UI/UI_3.png',
@@ -72,45 +68,45 @@ class donjon1 extends Phaser.Scene {
 
     create() {
 
-        const carteDuNiveauDonjon1 = this.add.tilemap("carteDJ1");
+        const carteDuNiveauDonjon2 = this.add.tilemap("carteDJ2");
 
-        const tilesetDJ1 = carteDuNiveauDonjon1.addTilesetImage(
+        const tilesetDJ2 = carteDuNiveauDonjon2.addTilesetImage(
             "tileset",
-            "tileDJ1"
+            "tileDJ2"
         );
 
 
 
         //il s'appelle calque pic mais c'est surtout celui avec la lave
-        const calque_sol_DJ1 = carteDuNiveauDonjon1.createLayer(
-            "sol_donj1",
-            tilesetDJ1
+        const calque_sol_DJ2 = carteDuNiveauDonjon2.createLayer(
+            "sol_donj2",
+            tilesetDJ2
         );
 
 
 
-        const calque_murs_donjon1 = carteDuNiveauDonjon1.createLayer(
-            "murs_donj1",
-            tilesetDJ1
+        const calque_murs_donj2 = carteDuNiveauDonjon2.createLayer(
+            "murs_donj2",
+            tilesetDJ2
         );
 
-        const calque_obstacles_DJ1 = carteDuNiveauDonjon1.createLayer(
-            "obstacles",
-            tilesetDJ1
+        const calque_obstacles_DJ2 = carteDuNiveauDonjon2.createLayer(
+            "obstacles_donj2",
+            tilesetDJ2
         );
 
 
 
 
-        calque_murs_donjon1.setCollisionByProperty({ EstSolide: true });
+        calque_murs_donj2.setCollisionByProperty({ EstSolide: true });
 
-        calque_obstacles_DJ1.setCollisionByProperty({ EstSolide: true });
-
-
+        calque_obstacles_DJ2.setCollisionByProperty({ EstSolide: true });
 
 
 
-        this.player = this.physics.add.sprite(1650, 570, 'perso');
+
+
+        this.player = this.physics.add.sprite(900, 950, 'perso');
 
 
 
@@ -118,18 +114,18 @@ class donjon1 extends Phaser.Scene {
         this.player.setScale(1.2)
         this.player.setSize(45, 45)
 
-        this.origine = "donjon1"
+        this.origine = "donjon2"
 
 
-        this.physics.add.collider(this.player, calque_murs_donjon1);
-        this.physics.add.collider(this.player, calque_obstacles_DJ1);
+        this.physics.add.collider(this.player, calque_murs_donj2);
+        this.physics.add.collider(this.player, calque_obstacles_DJ2);
 
 
-        this.physics.world.setBounds(0, 0, 10000, 10000);
+        this.physics.world.setBounds(0, 0, 15000, 15000);
         //  ajout du champs de la caméra de taille identique à celle du monde
-        this.cameras.main.setBounds(0, 0, 10000, 10000);
+        this.cameras.main.setBounds(-1000, -1000, 15000, 15000);
 
-        this.cameras.main.centerOn(1650, 570)
+        this.cameras.main.centerOn(900, 640)
 
 
         this.cameras.main.setZoom(0.6)
@@ -913,56 +909,8 @@ class donjon1 extends Phaser.Scene {
         }
 
         //creation boss
-        if (this.boss1vaincu == false) {
-            {
-                this.bossD1 = this.physics.add.sprite(8750, 5450, 'boss_corps');
-                this.bossD1.body.immovable = true;
-                this.physics.add.collider(this.player, this.bossD1, this.playerHitR, null, this);
-                this.physics.add.overlap(this.epee, this.bossD1, this.playerFrappeRate, null, this);
-                this.physics.add.overlap(this.epee2, this.bossD1, this.playerFrappeRate, null, this);
-                this.physics.add.overlap(this.pince, this.bossD1, this.playerFrappeBoss, null, this);
-                this.physics.add.overlap(this.pince2, this.bossD1, this.playerFrappeBoss, null, this);
-                this.physics.add.overlap(this.bulles1, this.bossD1, this.playerFrappeRate, null, this);
-                this.physics.add.overlap(this.bulles2, this.bossD1, this.playerFrappeRate, null, this);
-                this.physics.add.overlap(this.bulles3, this.bossD1, this.playerFrappeRate, null, this);
-                this.physics.add.overlap(this.bulles4, this.bossD1, this.playerFrappeRate, null, this);
-                this.bossD1.setScale(1.5)
-                this.bossD1.vie = 2;
-            }
-            {
-                this.bossD1_Pince1 = this.physics.add.sprite(8400, 5600, 'boss_pince');
-                this.bossD1_Pince1.body.immovable = true;
-                this.physics.add.collider(this.player, this.bossD1_Pince1, this.playerHitR, null, this);
-                this.physics.add.overlap(this.epee, this.bossD1_Pince1, this.playerFrappeRate, null, this);
-                this.physics.add.overlap(this.epee2, this.bossD1_Pince1, this.playerFrappeRate, null, this);
-                this.physics.add.overlap(this.pince, this.bossD1_Pince1, this.playerFrappeBoss, null, this);
-                this.physics.add.overlap(this.pince2, this.bossD1_Pince1, this.playerFrappeBoss, null, this);
-                this.physics.add.overlap(this.bulles1, this.bossD1_Pince1, this.playerFrappeRate, null, this);
-                this.physics.add.overlap(this.bulles2, this.bossD1_Pince1, this.playerFrappeRate, null, this);
-                this.physics.add.overlap(this.bulles3, this.bossD1_Pince1, this.playerFrappeRate, null, this);
-                this.physics.add.overlap(this.bulles4, this.bossD1_Pince1, this.playerFrappeRate, null, this);
-                this.bossD1_Pince1.setScale(1.5)
-                this.bossD1_Pince1.vie = 2;
 
-            }
-            {
-                this.bossD1_Pince2 = this.physics.add.sprite(9100, 5600, 'boss_pince');
-                this.bossD1_Pince2.body.immovable = true;
-                this.physics.add.collider(this.player, this.bossD1_Pince2, this.playerHitR, null, this);
-                this.physics.add.overlap(this.epee, this.bossD1_Pince2, this.playerFrappeRate, null, this);
-                this.physics.add.overlap(this.epee2, this.bossD1_Pince2, this.playerFrappeRate, null, this);
-                this.physics.add.overlap(this.pince, this.bossD1_Pince2, this.playerFrappeBoss, null, this);
-                this.physics.add.overlap(this.pince2, this.bossD1_Pince2, this.playerFrappeBoss, null, this);
-                this.physics.add.overlap(this.bulles1, this.bossD1_Pince2, this.playerFrappeRate, null, this);
-                this.physics.add.overlap(this.bulles2, this.bossD1_Pince2, this.playerFrappeRate, null, this);
-                this.physics.add.overlap(this.bulles3, this.bossD1_Pince2, this.playerFrappeRate, null, this);
-                this.physics.add.overlap(this.bulles4, this.bossD1_Pince2, this.playerFrappeRate, null, this);
-                this.bossD1_Pince2.setScale(1.5)
-                this.bossD1_Pince2.flipX = true;
-                this.bossD1_Pince2.vie = 2;
 
-            }
-        }
 
 
 
@@ -1001,13 +949,11 @@ class donjon1 extends Phaser.Scene {
         this.perleD1_L8 = this.physics.add.sprite(1200 + 200 + 200, 7350, 'perle');
         this.physics.add.collider(this.player, this.perleD1_L8, this.playerPerle, null, this);
 
-
         //display powerup a rammasser
         //boite message d'indic a faire
-        if (this.powerup2 == false) {
-            this.pincePowerUp = this.physics.add.sprite(6420, 3740, 'pinceARamass');
-            this.physics.add.collider(this.player, this.pincePowerUp, this.playerTrouvePince, null, this);
-        }
+        this.pincePowerUp = this.physics.add.sprite(6420, 3740, 'pinceARamass');
+        this.physics.add.collider(this.player, this.pincePowerUp, this.playerTrouvePince, null, this);
+
 
 
         //anims
@@ -1047,27 +993,6 @@ class donjon1 extends Phaser.Scene {
             });
 
 
-            //anim boss
-            this.anims.create({
-                key: 'bossVieMax',
-                frames: [{ key: 'boss_corps', frame: 0 }],
-                frameRate: 20
-            });
-            this.anims.create({
-                key: 'bossVieMoins',
-                frames: [{ key: 'boss_corps', frame: 1 }],
-                frameRate: 20
-            });
-            this.anims.create({
-                key: 'pinceVieMax',
-                frames: [{ key: 'boss_pince', frame: 0 }],
-                frameRate: 20
-            });
-            this.anims.create({
-                key: 'pinceVieMoins',
-                frames: [{ key: 'boss_pince', frame: 1 }],
-                frameRate: 20
-            });
 
             //anim courrant
             this.anims.create({
@@ -1391,50 +1316,11 @@ class donjon1 extends Phaser.Scene {
             verticalAdjust: true
         });
 
-        //path boss
-        this.pathD1_8 = new Phaser.Curves.Path(8500, 5600);
-        this.pathD1_8.splineTo([8750, 5600]);
-        this.followD1_8 = this.add.follower(this.pathD1_8, 8600, 5600);
-        this.followD1_8.setScale(0.1);
-        this.followD1_8.startFollow({
-            duration: 6000,
-            repeat: -1,
-            yoyo: true,
-
-            rotateToPath: true,
-            verticalAdjust: true
-        });
-        this.followD1_9 = this.add.follower(this.pathD1_8, 8600 - 350, 5600);
-        this.followD1_9.setScale(0.1);
-        this.followD1_9.startFollow({
-            duration: 6000,
-            repeat: -1,
-            yoyo: true,
-
-            rotateToPath: true,
-            verticalAdjust: true
-        });
-        this.followD1_10 = this.add.follower(this.pathD1_8, 8600 + 350, 5600);
-        this.followD1_10.setScale(0.1);
-        this.followD1_10.startFollow({
-            duration: 6000,
-            repeat: -1,
-            yoyo: true,
-
-            rotateToPath: true,
-            verticalAdjust: true
-        });
-
 
         this.graphics.lineStyle(2, 0xffffff, 1);
         //  this.pathD1_0.draw(this.graphics);
-        if (this.boss1vaincu == false) {
-            this.bossMort = false
-            this.pinceDroiteCasse = false
-            this.pinceGaucheCasse = false
-            this.pinceDroiteHaute = true
-            this.pinceGaucheHaute = false
-        }
+
+
     }
 
 
@@ -1445,118 +1331,6 @@ class donjon1 extends Phaser.Scene {
         //update du compteur de perles
         this.comptPerle.setText(this.counterPerle)
 
-
-
-        if (this.boss1vaincu == false) {
-            if (this.bossD1.vie == 2) {
-                this.bossD1.anims.play('bossVieMax', true);
-
-            }
-            else if (this.bossD1.vie == 1) {
-                this.bossD1.anims.play('bossVieMoins', true);
-
-            }
-            else if ((this.pinceGaucheCasse == false) || (this.pinceDroiteCasse == false)) {
-                this.bossD1.setTint(0xff0000);
-            }
-            else {
-                this.boss1vaincu = true
-                this.bossD1.destroy()
-
-
-            }
-            if (this.bossD1_Pince2.vie == 2) {
-                this.bossD1_Pince2.anims.play('pinceVieMax', true);
-
-            }
-            else if (this.bossD1_Pince2.vie == 1) {
-                this.bossD1_Pince2.anims.play('pinceVieMoins', true);
-
-            }
-            else {
-                this.bossD1_Pince2.destroy()
-                this.pinceDroiteCasse = true
-            }
-            if (this.bossD1_Pince1.vie == 2) {
-                this.bossD1_Pince1.anims.play('pinceVieMax', true);
-
-            }
-            else if (this.bossD1_Pince1.vie == 1) {
-                this.bossD1_Pince1.anims.play('pinceVieMoins', true);
-
-            }
-
-
-            else {
-                this.bossD1_Pince1.destroy()
-                this.pinceGaucheCasse = true
-            }
-
-
-            //anims du boss
-            {
-
-
-                if (!this.pinceDroiteCasse) {
-                    if (this.pinceDroiteHaute) {
-
-
-                        setTimeout(() => {
-                            this.pinceDroiteHaute = false
-
-                            this.bossD1_Pince2.y = 5600
-                            this.bossD1_Pince2.flipY = true
-
-
-                        }, 1000);
-
-                    }
-                    else {
-
-                        setTimeout(() => {
-                            this.pinceDroiteHaute = true
-
-                            this.bossD1_Pince2.y = 5200
-                            this.bossD1_Pince2.flipY = false
-
-
-                        }, 1000);
-                    }
-
-                }
-
-                if (!this.pinceGaucheCasse) {
-                    if (this.pinceGaucheHaute) {
-
-
-                        setTimeout(() => {
-                            this.pinceGaucheHaute = false
-
-                            this.bossD1_Pince1.y = 5600
-                            this.bossD1_Pince1.flipY = true
-
-
-                        }, 1000);
-
-                    }
-                    else {
-
-                        setTimeout(() => {
-                            this.pinceGaucheHaute = true
-
-                            this.bossD1_Pince1.y = 5200
-                            this.bossD1_Pince1.flipY = false
-
-
-                        }, 1000);
-                    }
-
-                }
-
-
-
-            }
-        }
 
         //anims des courants
         {
@@ -1635,241 +1409,299 @@ class donjon1 extends Phaser.Scene {
         //param des changemetns de salles
         {
 
-            //de 1 vers plaines
-            if ((this.player.x < 1080 && this.player.x > 970) && (this.player.y < 630 && this.player.y > 450)) {
-                this.scene.start("plaines", { origin: this.origine, powerup2: this.powerup2, powerup3: this.powerup3, vieA: this.vieActuelle, vieM: this.vieMax, counterPerle: this.counterPerle, boss1: this.boss1vaincu, boss2: this.boss2vaincu, tabBoostVie: this.boostViePrise });
+            //de 1 vers abysses
+            if ((this.player.x < 980 && this.player.x > 790) && (this.player.y < 1150 && this.player.y > 1023)) {
+                this.scene.start("abysses", { origin: this.origine, powerup2: this.powerup2, powerup3: this.powerup3, vieA: this.vieActuelle, vieM: this.vieMax, counterPerle: this.counterPerle, boss1: this.boss1vaincu, boss2: this.boss2vaincu, tabBoostVie: this.boostViePrise });
 
 
 
             }
 
             //de 1 vers 2
-            if ((this.player.x < 2360 && this.player.x > 2160) && (this.player.y < 630 && this.player.y > 450)) {
+            if ((this.player.x < 980 && this.player.x > 790) && (this.player.y < 250 && this.player.y > 120)) {
 
 
-                this.cameras.main.centerOn(4126, 790)
-                this.player.x = 3620
-                this.player.y = 770
+                this.cameras.main.centerOn(3390, 640)
+                this.player.x = 3390
+                this.player.y = 925
             }
 
 
             //de 2 vers 1
-            if ((this.player.x < 3580 && this.player.x > 3510) && (this.player.y < 815 && this.player.y > 650)) {
+            if ((this.player.x < 3500 && this.player.x > 3270) && (this.player.y < 1150 && this.player.y > 1023)) {
 
-                this.cameras.main.centerOn(1650, 570)
+                this.cameras.main.centerOn(900, 640)
 
-                this.player.x = 2110
-                this.player.y = 570
+                this.player.x = 900
+                this.player.y = 340
 
             }
 
 
             //de 2 vers 3
-            if ((this.player.x < 4750 && this.player.x > 4676) && (this.player.y < 815 && this.player.y > 650)) {
-                this.cameras.main.centerOn(6570, 570)
+            if ((this.player.x < 3500 && this.player.x > 3270) && (this.player.y < 250 && this.player.y > 120)) {
+                this.cameras.main.centerOn(900, 3130)
 
-                this.player.x = 6050
-                this.player.y = 570
-            }
-
-            //de 3 vers 2
-            if ((this.player.x < 6015 && this.player.x > 5900) && (this.player.y < 630 && this.player.y > 450)) {
-                this.player.y = 790
-                this.cameras.main.centerOn(4126, 790)
-
-                this.player.x = 4600
-            }
-
-
-
-            //de 3 vers 4
-            if ((this.player.x < 6640 && this.player.x > 6470) && (this.player.y < 1030 && this.player.y > 960)) {
-                this.player.x = 1634
-                this.player.y = 3128
-                this.cameras.main.centerOn(1630, 3460)
-
-            }
-            //de 4 vers 3
-            if ((this.player.x < 1700 && this.player.x > 1550) && (this.player.y < 3070 && this.player.y > 3000)) {
-                this.cameras.main.centerOn(6570, 570)
-                this.player.x = 6550
-                this.player.y = 890
-
-            }
-            //de 4 vers 5
-            if ((this.player.x < 2270 && this.player.x > 2170) && (this.player.y < 3500 && this.player.y > 3360)) {
-                this.cameras.main.centerOn(4124, 3650)
-                this.player.x = 3650
-                this.player.y = 3600
-
-            }
-
-
-            //de 4 vers 7
-            if ((this.player.x < 1700 && this.player.x > 1550) && (this.player.y < 3960 && this.player.y > 3840)) {
-                this.cameras.main.centerOn(4060, 5380)
-                this.player.x = 4090
-                this.player.y = 5044
-
-            }
-
-
-            //de 5 vers 4
-            if ((this.player.x < 3585 && this.player.x > 3480) && (this.player.y < 3670 && this.player.y > 3540)) {
-                this.cameras.main.centerOn(1630, 3460)
-                this.player.x = 2090
-                this.player.y = 3450
-
-            }
-
-            //de 5 vers 6
-            if ((this.player.x < 4800 && this.player.x > 4680) && (this.player.y < 3670 && this.player.y > 3540)) {
-                this.cameras.main.centerOn(6563, 3455)
-                this.player.x = 6064
-                this.player.y = 3450
-
-            }
-
-            //de 6 vers 5
-            if ((this.player.x < 6020 && this.player.x > 5900) && (this.player.y < 3550 && this.player.y > 3330)) {
-                this.cameras.main.centerOn(4124, 3650)
-                this.player.x = 4590
-                this.player.y = 3650
-
-            }
-
-
-            //de 7 vers 4
-            if ((this.player.x < 4150 && this.player.x > 3930) && (this.player.y < 4980 && this.player.y > 4880)) {
-                this.cameras.main.centerOn(1630, 3460)
-                this.player.x = 1630
-                this.player.y = 3740
-
-            }
-
-
-            //de 7 vers 8
-            if ((this.player.x < 4150 && this.player.x > 3930) && (this.player.y < 5880 && this.player.y > 5758)) {
-                this.cameras.main.centerOn(1630, 2050)
-                this.player.x = 1630
-                this.player.y = 1730
-
-            }
-
-            //de 8 vers 7
-            if ((this.player.x < 1700 && this.player.x > 1550) && (this.player.y < 1660 && this.player.y > 1550)) {
-                this.cameras.main.centerOn(4060, 5380)
-                this.player.x = 4090
-                this.player.y = 5680
-
-            }
-
-            //de 8 vers 9
-            if ((this.player.x < 1700 && this.player.x > 1550) && (this.player.y < 2550 && this.player.y > 2430)) {
-                this.cameras.main.centerOn(6430, 7680)
-                this.player.x = 6430
-                this.player.y = 7360
-            }
-            //de 9 vers 8
-            if ((this.player.x < 6550 && this.player.x > 6350) && (this.player.y < 7295 && this.player.y > 7188)) {
-                this.cameras.main.centerOn(1630, 2050)
-                this.player.x = 1630
-                this.player.y = 2350
-            }
-            //de 9 vers 10
-            if ((this.player.x < 7100 && this.player.x > 6980) && (this.player.y < 7730 && this.player.y > 7550)) {
-                this.cameras.main.centerOn(4130, 2230)
-                this.player.x = 3650
-                this.player.y = 2230
-            }
-
-            //de 10 vers 9
-            if ((this.player.x < 3580 && this.player.x > 3450) && (this.player.y < 2280 && this.player.y > 2126)) {
-                this.cameras.main.centerOn(6430, 7680)
-                this.player.x = 6900
-                this.player.y = 7680
-            }
-
-
-            //de 9 vers 13
-            if ((this.player.x < 5880 && this.player.x > 5750) && (this.player.y < 7730 && this.player.y > 7550)) {
-                this.cameras.main.centerOn(4060, 7290)
-                this.player.x = 4540
-                this.player.y = 7290
-            }
-            //de 13 vers 9
-            if ((this.player.x < 4750 && this.player.x > 4610) && (this.player.y < 7350 && this.player.y > 7180)) {
-                this.cameras.main.centerOn(6430, 7680)
-                this.player.x = 5960
-                this.player.y = 7680
-            }
-
-
-            //de 10 vers 11
-            if ((this.player.x < 4800 && this.player.x > 4670) && (this.player.y < 2280 && this.player.y > 2126)) {
-                this.cameras.main.centerOn(1630, 5184)
-                this.player.x = 1144
-                this.player.y = 5224
-            }
-
-            //de 11 vers 10
-            if ((this.player.x < 1080 && this.player.x > 960) && (this.player.y < 5300 && this.player.y > 5130)) {
-                this.cameras.main.centerOn(4130, 2230)
-                this.player.x = 4612
-                this.player.y = 2230
-            }
-
-            //de 11 vers 12(boss)
-            if ((this.player.x < 1720 && this.player.x > 1500) && (this.player.y < 4800 && this.player.y > 4680)) {
-                this.cameras.main.centerOn(8727, 5700)
-                this.player.x = 8727
-                this.player.y = 6330
+                this.player.x = 900
+                this.player.y = 4040
                 this.cameras.main.setZoom(0.45)
+                this.cameras.main.startFollow(this.player);
+
                 this.ui.x = -120
                 this.ui.y = -200
                 this.comptPerle.x = -235
                 this.comptPerle.y = -125
             }
 
+            //de 3 vers 2
+            if ((this.player.x < 980 && this.player.x > 790) && (this.player.y < 4200 && this.player.y > 4100)) {
+                this.player.y = 350
+                this.cameras.main.centerOn(3390, 640)
+                this.cameras.main.stopFollow(this.player)
 
-            //de 12(boss) vers 11
-            if ((this.player.x < 8827 && this.player.x > 8650) && (this.player.y < 6500 && this.player.y > 6400)) {
-                this.cameras.main.centerOn(1630, 5184)
-                this.player.x = 1630
-                this.player.y = 4864
+                this.player.x = 3390
                 this.cameras.main.setZoom(0.6)
                 this.ui.x = -100
                 this.ui.y = -80
                 this.comptPerle.x = -220
                 this.comptPerle.y = 0
+            }
+
+
+
+            //de 3 vers 4 (boss) 
+            if ((this.player.x < 980 && this.player.x > 790) && (this.player.y < 2230 && this.player.y > 2100)) {
+                this.player.x = 1634
+                this.player.y = 3128
+                this.cameras.main.centerOn(1630, 3460)
+                //camera a modifier (salle aussi)
+            }
+
+
+
+            //elephant a finir !
+            //de 4(boss) vers 3
+            if ((this.player.x < 1700 && this.player.x > 1550) && (this.player.y < 760 && this.player.y > 540)) {//y pas bon
+                this.cameras.main.centerOn(900, 3130)
+                this.player.x = 900
+                this.player.y = 2300
+
+                this.cameras.main.startFollow(this.player);
+
+                this.ui.x = -120
+                this.ui.y = -200
+                this.comptPerle.x = -235
+                this.comptPerle.y = -125
 
             }
 
-            //de 13 vers 14
-            if ((this.player.x < 3500 && this.player.x > 3390) && (this.player.y < 7350 && this.player.y > 7180)) {
-                this.cameras.main.centerOn(1630, 7100)
-                this.player.x = 2100
-                this.player.y = 7100
-            }
-            //de 14 vers 13
-            if ((this.player.x < 2300 && this.player.x > 2180) && (this.player.y < 7150 && this.player.y > 7000)) {
-                this.cameras.main.centerOn(4060, 7290)
-                this.player.x = 3580
-                this.player.y = 7280
+
+            //de 2 vers 5
+            if ((this.player.x < 4030 && this.player.x > 3900) && (this.player.y < 760 && this.player.y > 540)) {
+                this.cameras.main.centerOn(8300, 640)
+                this.player.x = 7880
+                this.player.y = 640
+
             }
 
-            //de 13 vers 15
-            if ((this.player.x < 4150 && this.player.x > 3970) && (this.player.y < 7800 && this.player.y > 7680)) {
-                this.cameras.main.centerOn(4060, 9280)
-                this.player.x = 4060
-                this.player.y = 8970
+            //de 5 vers 2
+            if ((this.player.x < 7800 && this.player.x > 7660) && (this.player.y < 760 && this.player.y > 540)) {
+                this.cameras.main.centerOn(3390, 640)
+                this.player.x = 3830
+                this.player.y = 640
+
             }
-            //de 15 vers 13
-            if ((this.player.x < 4150 && this.player.x > 3970) && (this.player.y < 8890 && this.player.y > 8700)) {
-                this.cameras.main.centerOn(4060, 7290)
-                this.player.x = 4060
-                this.player.y = 7600
+
+            //de 5 vers 6
+            if ((this.player.x < 8430 && this.player.x > 8220) && (this.player.y < 250 && this.player.y > 120)) {
+                this.cameras.main.centerOn(5820, 3130)
+                this.player.x = 5820
+                this.player.y = 4030
+
+                this.cameras.main.setZoom(0.45)
+                this.cameras.main.startFollow(this.player);
+
+                this.ui.x = -120
+                this.ui.y = -200
+                this.comptPerle.x = -235
+                this.comptPerle.y = -125
+
             }
+
+            //de 6 vers 5
+            if ((this.player.x < 5900 && this.player.x > 5700) && (this.player.y < 4200 && this.player.y > 4100)) {
+                this.player.y = 350
+                this.cameras.main.centerOn(8300, 640)
+                this.cameras.main.stopFollow(this.player)
+
+                this.player.x = 8300
+                this.cameras.main.setZoom(0.6)
+                this.ui.x = -100
+                this.ui.y = -80
+                this.comptPerle.x = -220
+                this.comptPerle.y = 0
+            }
+
+
+            //de 6 vers 7
+            if ((this.player.x < 6500 && this.player.x > 6340) && (this.player.y < 3820 && this.player.y > 3620)) {
+                this.player.y = 4225
+                this.cameras.main.centerOn(8320, 4225)
+                this.cameras.main.stopFollow(this.player)
+
+                this.player.x = 7888
+                this.cameras.main.setZoom(0.6)
+                this.ui.x = -100
+                this.ui.y = -80
+                this.comptPerle.x = -220
+                this.comptPerle.y = 0
+            }
+
+
+            //de 7 vers 6
+            if ((this.player.x < 7800 && this.player.x > 7650) && (this.player.y < 4300 && this.player.y > 4100)) {
+                this.cameras.main.centerOn(5840, 3130)
+                this.player.x = 6230
+                this.player.y = 3750
+
+                this.cameras.main.setZoom(0.45)
+                this.cameras.main.startFollow(this.player);
+
+                this.ui.x = -120
+                this.ui.y = -200
+                this.comptPerle.x = -235
+                this.comptPerle.y = -125
+
+            }
+
+            //de 6 vers 8
+            if ((this.player.x < 6500 && this.player.x > 6340) && (this.player.y < 3180 && this.player.y > 2980)) {
+                this.player.y = 2430
+                this.cameras.main.centerOn(8300, 2430)
+                this.cameras.main.stopFollow(this.player)
+
+                this.player.x = 7920
+                this.cameras.main.setZoom(0.6)
+                this.ui.x = -100
+                this.ui.y = -80
+                this.comptPerle.x = -220
+                this.comptPerle.y = 0
+            }
+
+            //de 8 vers 6
+            if ((this.player.x < 7800 && this.player.x > 7650) && (this.player.y < 2520 && this.player.y > 2320)) {
+                this.cameras.main.centerOn(5840, 3130)
+                this.player.x = 6230
+                this.player.y = 3100
+
+                this.cameras.main.setZoom(0.45)
+                this.cameras.main.startFollow(this.player);
+
+                this.ui.x = -120
+                this.ui.y = -200
+                this.comptPerle.x = -235
+                this.comptPerle.y = -125
+
+            }
+
+
+            //de 6 vers 9
+            if ((this.player.x < 6500 && this.player.x > 6340) && (this.player.y < 2540 && this.player.y > 2340)) {
+                this.player.y = 5950
+                this.cameras.main.centerOn(8300, 5950)
+                this.cameras.main.stopFollow(this.player)
+
+                this.player.x = 7930
+                this.cameras.main.setZoom(0.6)
+                this.ui.x = -100
+                this.ui.y = -80
+                this.comptPerle.x = -220
+                this.comptPerle.y = 0
+            }
+
+
+            //de 9 vers 6
+            if ((this.player.x < 7800 && this.player.x > 7650) && (this.player.y < 6040 && this.player.y > 5840)) {
+                this.cameras.main.centerOn(5840, 3130)
+                this.player.x = 6230
+                this.player.y = 2440
+
+                this.cameras.main.setZoom(0.45)
+                this.cameras.main.startFollow(this.player);
+
+                this.ui.x = -120
+                this.ui.y = -200
+                this.comptPerle.x = -235
+                this.comptPerle.y = -125
+
+            }
+
+
+
+
+            //de 2 vers 10
+            if ((this.player.x < 2870 && this.player.x > 2780) && (this.player.y < 760 && this.player.y > 540)) {
+                this.cameras.main.centerOn(5824, 640)
+                this.player.x = 6240
+                this.player.y = 640
+
+            }
+
+            //de 10 vers 2
+            if ((this.player.x < 6440 && this.player.x > 6330) && (this.player.y < 760 && this.player.y > 540)) {
+                this.cameras.main.centerOn(3390, 640)
+                this.player.x = 2950
+                this.player.y = 640
+
+            }
+
+
+
+
+
+            //de 10 vers 11
+            if ((this.player.x < 5920 && this.player.x > 5720) && (this.player.y < 250 && this.player.y > 120)) {
+                this.cameras.main.centerOn(3390, 3127)
+                this.player.x = 3390
+                this.player.y = 4030
+
+                this.cameras.main.setZoom(0.45)
+                this.cameras.main.startFollow(this.player);
+
+                this.ui.x = -120
+                this.ui.y = -200
+                this.comptPerle.x = -235
+                this.comptPerle.y = -125
+
+            }
+
+            //de 11 vers 10
+            if ((this.player.x < 3475 && this.player.x > 3270) && (this.player.y < 4200 && this.player.y > 4100)) {
+                this.player.y = 350
+                this.cameras.main.centerOn(5824, 640)
+                this.cameras.main.stopFollow(this.player)
+
+                this.player.x = 5824
+                this.cameras.main.setZoom(0.6)
+                this.ui.x = -100
+                this.ui.y = -80
+                this.comptPerle.x = -220
+                this.comptPerle.y = 0
+            }
+
+
+            //de 11 vers 12
+            if ((this.player.x < 3475 && this.player.x > 3270) && (this.player.y < 2240 && this.player.y > 2110)) {
+                this.player.x = 7800
+                this.player.y = 9080
+            }
+
+            //de 12 vers 11
+            if ((this.player.x < 7900 && this.player.x > 7680) && (this.player.y < 9300 && this.player.y > 9150)) {
+                this.player.x = 3390
+                this.player.y = 2300
+            }
+
 
 
         }
@@ -1877,27 +1709,9 @@ class donjon1 extends Phaser.Scene {
 
         //mouvement des requins
 
-        this.requinD1_0.x = this.followD1_0.x
-        this.requinD1_0.y = this.followD1_0.y
-        this.requinD1_1.x = this.followD1_1.x
-        this.requinD1_1.y = this.followD1_1.y
-        this.requinD1_4.x = this.followD1_2.x
-        this.requinD1_4.y = this.followD1_2.y
-        this.requinD1_5.x = this.followD1_3.x
-        this.requinD1_5.y = this.followD1_3.y
-        this.requinD1_6.x = this.followD1_4.x
-        this.requinD1_6.y = this.followD1_4.y
-        this.requinD1_7.x = this.followD1_5.x
-        this.requinD1_7.y = this.followD1_5.y
-        this.requinD1_8.x = this.followD1_6.x
-        this.requinD1_8.y = this.followD1_6.y
-        this.requinD1_9.x = this.followD1_7.x
-        this.requinD1_9.y = this.followD1_7.y
-        if (this.boss1vaincu == false) {
-            this.bossD1.x = this.followD1_8.x
-            this.bossD1_Pince1.x = this.followD1_9.x
-            this.bossD1_Pince2.x = this.followD1_10.x
-        }
+
+
+
         //affichage des attaques
 
         if (this.keyA.isDown && this.attk) {
