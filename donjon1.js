@@ -67,6 +67,8 @@ class donjon1 extends Phaser.Scene {
         this.load.image("soin", "assets/sprites/Sprite_coeur_soin.png");
         this.load.image("perle", "assets/sprites/Sprite_perle.png");
         this.load.image("pinceARamass", "assets/sprites/icone_crabe.png");
+        this.load.image("bonus", "assets/sprites/Sprite_coeur_bonus.png");
+
 
 
 
@@ -980,7 +982,7 @@ class donjon1 extends Phaser.Scene {
         this.physics.add.collider(this.player, this.soinD1_L2, this.playerSoin, null, this);
 
         if (this.boostViePrise[2] == false) {
-            this.soinA_L1 = this.physics.add.sprite(8730, 5060, 'boost');
+            this.soinA_L1 = this.physics.add.sprite(8730, 5060, 'bonus');
             this.physics.add.collider(this.player, this.soinA_L1, this.playerVieUp, null, this);
         }
 

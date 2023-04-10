@@ -44,6 +44,7 @@
                     { frameWidth: 64, frameHeight: 62 });
                 this.load.image('fondmenu', 'assets/UI/menu.png');
                 this.load.image('fondGO', 'assets/UI/gameOver.png');
+                this.load.image('victoire', 'assets/UI/victoire.png');
                 this.load.image('bouttonStart', 'assets/UI/boutonS.png');
                 this.load.image('bouttonQ', 'assets/UI/boutonQ.png');
                 this.load.image("place", "assets/tilesetPlaceholder.png");
@@ -57,7 +58,7 @@
             create() {
 
                 //variables du perso de base
-                this.powerup2 = true;
+                this.powerup2 = false;
                 this.powerup3 = false;
                 this.vieActuelle = 2;
                 this.vieMax = 2;
@@ -73,7 +74,7 @@
 
 
                 if(this.victoire){
-                    this.fond = this.add.image(640, 720 / 2, 'fondVictoire');
+                    this.fond = this.add.image(640, 720 / 2, 'victoire');
                     this.fond.setScale(0.3)
                 }
 
@@ -133,7 +134,7 @@
                 default: 'arcade',
                 arcade: {
                     gravity: false,
-                    debug: true
+                    debug: false
                 }
             },
 

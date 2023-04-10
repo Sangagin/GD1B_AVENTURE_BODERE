@@ -1,0 +1,83 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "plaines.tmx",
+    "expandedProjectPaths": [
+        "."
+    ],
+    "file.lastUsedOpenFilter": "Tous les Fichiers (*)",
+    "fileStates": {
+        "": {
+            "scaleInEditor": 1
+        },
+        "donjon1.tmx": {
+            "scale": 0.125,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 5228,
+                "y": 3940
+            }
+        },
+        "donjon1.tmx#tileset": {
+            "scaleInDock": 1
+        },
+        "placeholder.tsx": {
+            "scaleInDock": 0.5,
+            "scaleInEditor": 1
+        },
+        "plaines.tmx": {
+            "scale": 0.125,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 3620,
+                "y": 2948
+            }
+        },
+        "plaines.tmx#tilesetFinal": {
+            "scaleInDock": 0.75
+        },
+        "plaines.tmx#tilesetPlaceholder": {
+            "scaleInDock": 0.25
+        },
+        "tuto+village.tmx": {
+            "scale": 0.125,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 2452,
+                "y": 2868
+            }
+        },
+        "tuto+village.tmx#tilesetPlaceholder": {
+            "scaleInDock": 0.5,
+            "scaleInEditor": 1
+        }
+    },
+    "last.exportedFilePath": "C:/Users/game/Documents/GitHub/GD1B_ZELDALIKE_BODERE/assets/maps",
+    "last.imagePath": "D:/boulot/ETPA/JV1/Infographie 2D/Zelda-Like/sprites",
+    "map.height": 100,
+    "map.lastUsedExportFilter": "Tous les Fichiers (*)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 64,
+    "map.tileWidth": 64,
+    "map.width": 100,
+    "openFiles": [
+        "tuto+village.tmx",
+        "plaines.tmx",
+        "donjon1.tmx"
+    ],
+    "project": "Zelda_Like.tiled-project",
+    "recentFiles": [
+        "tuto+village.tmx",
+        "donjon1.tmx",
+        "plaines.tmx",
+        "placeholder.tsx"
+    ],
+    "tileset.embedInMap": true,
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 64,
+        "width": 64
+    }
+}

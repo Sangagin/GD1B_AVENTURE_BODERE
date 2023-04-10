@@ -65,8 +65,10 @@ class village extends Phaser.Scene {
         this.load.image("bullot", "assets/sprites/Sprite_enemmi_02.png");
         this.load.image("crevette", "assets/sprites/Sprite_enemmi_03.png");
         this.load.image("soin", "assets/sprites/Sprite_coeur_soin.png");
-        this.load.image("perle", "assets/sprites/Sprite_perle.png");
+        this.load.image("bonus", "assets/sprites/Sprite_coeur_bonus.png");
 
+        this.load.image("perle", "assets/sprites/Sprite_perle.png");
+        
 
 
 
@@ -489,7 +491,7 @@ class village extends Phaser.Scene {
         this.physics.add.collider(this.player, this.soinV_L0, this.playerSoin, null, this);
 
         if(this.boostViePrise[0]==false){
-            this.soinV_L1 = this.physics.add.sprite(290, 3810, 'boost');
+            this.soinV_L1 = this.physics.add.sprite(290, 3810, 'bonus');
             this.physics.add.collider(this.player, this.soinV_L1, this.playerVieUp, null, this);
         }
         this.soinV_L2 = this.physics.add.sprite(3815, 2524, 'soin');
@@ -825,12 +827,15 @@ class village extends Phaser.Scene {
             this.scene.start("abysses", { origin: this.origine, powerup2: this.powerup2, powerup3: this.powerup3, vieA: this.vieActuelle, vieM: this.vieMax, counterPerle: this.counterPerle ,boss1: this.boss1vaincu, boss2: this.boss2vaincu,tabBoostVie:this.boostViePrise });
         }
 
+
+        //test des scenes
+        /*
         if(this.player.x>100){
             this.scene.start("donjon2", { origin: this.origine, powerup2: this.powerup2, powerup3: this.powerup3, vieA: this.vieActuelle, vieM: this.vieMax, counterPerle: this.counterPerle ,boss1: this.boss1vaincu, boss2: this.boss2vaincu,tabBoostVie:this.boostViePrise });
 
 
         }
-
+*/
 
         //affichage des attaques
 

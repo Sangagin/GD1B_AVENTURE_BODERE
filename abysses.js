@@ -66,6 +66,7 @@ class abysses extends Phaser.Scene {
         this.load.image("crevette", "assets/sprites/Sprite_enemmi_03.png");
         this.load.image("soin", "assets/sprites/Sprite_coeur_soin.png");
         this.load.image("perle", "assets/sprites/Sprite_perle.png");
+        this.load.image("bonus", "assets/sprites/Sprite_coeur_bonus.png");
 
 
 
@@ -654,7 +655,7 @@ class abysses extends Phaser.Scene {
         this.physics.add.collider(this.player, this.soinA_L0, this.playerSoin, null, this);
 
         if (this.boostViePrise[3] == false) {
-            this.soinA_L1 = this.physics.add.sprite(3970, 3800, 'boost');
+            this.soinA_L1 = this.physics.add.sprite(3970, 3800, 'bonus');
             this.physics.add.collider(this.player, this.soinA_L1, this.playerVieUp, null, this);
         }
 
@@ -1003,6 +1004,9 @@ class abysses extends Phaser.Scene {
         if (this.player.y < 50) {
             this.scene.start("village", { origin: this.origine, powerup2: this.powerup2, powerup3: this.powerup3, vieA: this.vieActuelle, vieM: this.vieMax, counterPerle: this.counterPerle, boss1: this.boss1vaincu, boss2: this.boss2vaincu, tabBoostVie: this.boostViePrise });
         }
+if((this.player.x > 760 && this.player.x < 840) && (this.player.y > 4382 && this.player.y < 4480)){
+        this.scene.start("donjon2", { origin: this.origine, powerup2: this.powerup2, powerup3: this.powerup3, vieA: this.vieActuelle, vieM: this.vieMax, counterPerle: this.counterPerle ,boss1: this.boss1vaincu, boss2: this.boss2vaincu,tabBoostVie:this.boostViePrise });
+}
 
 
 

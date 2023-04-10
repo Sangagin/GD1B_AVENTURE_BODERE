@@ -115,7 +115,7 @@ class donjon2 extends Phaser.Scene {
 
 
 
-        this.player = this.physics.add.sprite(900, 950, 'perso');
+        this.player = this.physics.add.sprite(880, 920, 'perso');
 
 
 
@@ -144,7 +144,6 @@ class donjon2 extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();
         this.lastFacingDirection = "right"
 
-        this.player.x = 1150
 
 
         this.keyA = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
@@ -204,14 +203,14 @@ class donjon2 extends Phaser.Scene {
         this.physics.add.overlap(this.bulles4, this.levier1, this.bougeLevier, null, this);
 
         this.levier2 = this.physics.add.sprite(5980, 7333, 'levier');
-        this.levier2.levierActif=true
+        this.levier2.levierActif=false
         this.levier2.immovable=true
         this.physics.add.overlap(this.bulles1, this.levier2, this.bougeLevier, null, this);
         this.physics.add.overlap(this.bulles2, this.levier2, this.bougeLevier, null, this);
         this.physics.add.overlap(this.bulles3, this.levier2, this.bougeLevier, null, this);
         this.physics.add.overlap(this.bulles4, this.levier2, this.bougeLevier, null, this);
         this.levier3 = this.physics.add.sprite(8700, 2433, 'levier');
-        this.levier3.levierActif=true
+        this.levier3.levierActif=false
         this.levier3.immovable=true
         this.physics.add.overlap(this.bulles1, this.levier3, this.bougeLevier, null, this);
         this.physics.add.overlap(this.bulles2, this.levier3, this.bougeLevier, null, this);
@@ -2271,7 +2270,152 @@ class donjon2 extends Phaser.Scene {
         }
 
 
-        //mouvement des requins
+        //mouvement des ennemis
+        if (this.crevetteD2_C0.vivant == true) {
+            const distance = Phaser.Math.Distance.Between(this.crevetteD2_C0.x, this.crevetteD2_C0.y, this.player.x, this.player.y);
+            if (distance < 300) {
+                this.crevetteD2_C0.setVelocity(this.player.x - this.crevetteD2_C0.x, this.player.y - this.crevetteD2_C0.y);
+            } else {
+                this.crevetteD2_C0.setVelocity(0);
+            }
+        }
+
+        if (this.crevetteD2_C1.vivant == true) {
+            const distance = Phaser.Math.Distance.Between(this.crevetteD2_C1.x, this.crevetteD2_C1.y, this.player.x, this.player.y);
+            if (distance < 300) {
+                this.crevetteD2_C1.setVelocity(this.player.x - this.crevetteD2_C1.x, this.player.y - this.crevetteD2_C1.y);
+            } else {
+                this.crevetteD2_C1.setVelocity(0);
+            }
+        }
+        if (this.crevetteD2_C2.vivant == true) {
+            const distance = Phaser.Math.Distance.Between(this.crevetteD2_C2.x, this.crevetteD2_C2.y, this.player.x, this.player.y);
+            if (distance < 300) {
+                this.crevetteD2_C2.setVelocity(this.player.x - this.crevetteD2_C2.x, this.player.y - this.crevetteD2_C2.y);
+            } else {
+                this.crevetteD2_C2.setVelocity(0);
+            }
+        }
+        if (this.crevetteD2_C3.vivant == true) {
+            const distance = Phaser.Math.Distance.Between(this.crevetteD2_C3.x, this.crevetteD2_C3.y, this.player.x, this.player.y);
+            if (distance < 300) {
+                this.crevetteD2_C3.setVelocity(this.player.x - this.crevetteD2_C3.x, this.player.y - this.crevetteD2_C3.y);
+            } else {
+                this.crevetteD2_C3.setVelocity(0);
+            }
+        }
+        if (this.crevetteD2_C4.vivant == true) {
+            const distance = Phaser.Math.Distance.Between(this.crevetteD2_C4.x, this.crevetteD2_C4.y, this.player.x, this.player.y);
+            if (distance < 300) {
+                this.crevetteD2_C4.setVelocity(this.player.x - this.crevetteD2_C4.x, this.player.y - this.crevetteD2_C4.y);
+            } else {
+                this.crevetteD2_C4.setVelocity(0);
+            }
+        }
+        if (this.crevetteD2_C5.vivant == true) {
+            const distance = Phaser.Math.Distance.Between(this.crevetteD2_C5.x, this.crevetteD2_C5.y, this.player.x, this.player.y);
+            if (distance < 300) {
+                this.crevetteD2_C5.setVelocity(this.player.x - this.crevetteD2_C5.x, this.player.y - this.crevetteD2_C5.y);
+            } else {
+                this.crevetteD2_C5.setVelocity(0);
+            }
+        }
+        if (this.crevetteD2_C6.vivant == true) {
+            const distance = Phaser.Math.Distance.Between(this.crevetteD2_C6.x, this.crevetteD2_C6.y, this.player.x, this.player.y);
+            if (distance < 300) {
+                this.crevetteD2_C6.setVelocity(this.player.x - this.crevetteD2_C6.x, this.player.y - this.crevetteD2_C6.y);
+            } else {
+                this.crevetteD2_C6.setVelocity(0);
+            }
+        }
+        if (this.crevetteD2_C7.vivant == true) {
+            const distance = Phaser.Math.Distance.Between(this.crevetteD2_C7.x, this.crevetteD2_C7.y, this.player.x, this.player.y);
+            if (distance < 300) {
+                this.crevetteD2_C7.setVelocity(this.player.x - this.crevetteD2_C7.x, this.player.y - this.crevetteD2_C7.y);
+            } else {
+                this.crevetteD2_C7.setVelocity(0);
+            }
+        }
+        if (this.crevetteD2_C8.vivant == true) {
+            const distance = Phaser.Math.Distance.Between(this.crevetteD2_C8.x, this.crevetteD2_C8.y, this.player.x, this.player.y);
+            if (distance < 300) {
+                this.crevetteD2_C8.setVelocity(this.player.x - this.crevetteD2_C8.x, this.player.y - this.crevetteD2_C8.y);
+            } else {
+                this.crevetteD2_C8.setVelocity(0);
+            }
+        }
+        if (this.crevetteD2_C9.vivant == true) {
+            const distance = Phaser.Math.Distance.Between(this.crevetteD2_C9.x, this.crevetteD2_C9.y, this.player.x, this.player.y);
+            if (distance < 300) {
+                this.crevetteD2_C9.setVelocity(this.player.x - this.crevetteD2_C9.x, this.player.y - this.crevetteD2_C9.y);
+            } else {
+                this.crevetteD2_C9.setVelocity(0);
+            }
+        }
+        if (this.crevetteD2_C10.vivant == true) {
+            const distance = Phaser.Math.Distance.Between(this.crevetteD2_C10.x, this.crevetteD2_C10.y, this.player.x, this.player.y);
+            if (distance < 300) {
+                this.crevetteD2_C10.setVelocity(this.player.x - this.crevetteD2_C10.x, this.player.y - this.crevetteD2_C10.y);
+            } else {
+                this.crevetteD2_C10.setVelocity(0);
+            }
+        }
+        if (this.crevetteD2_C11.vivant == true) {
+            const distance = Phaser.Math.Distance.Between(this.crevetteD2_C11.x, this.crevetteD2_C11.y, this.player.x, this.player.y);
+            if (distance < 300) {
+                this.crevetteD2_C11.setVelocity(this.player.x - this.crevetteD2_C11.x, this.player.y - this.crevetteD2_C11.y);
+            } else {
+                this.crevetteD2_C11.setVelocity(0);
+            }
+        }
+        if (this.crevetteD2_C12.vivant == true) {
+            const distance = Phaser.Math.Distance.Between(this.crevetteD2_C12.x, this.crevetteD2_C12.y, this.player.x, this.player.y);
+            if (distance < 300) {
+                this.crevetteD2_C12.setVelocity(this.player.x - this.crevetteD2_C12.x, this.player.y - this.crevetteD2_C12.y);
+            } else {
+                this.crevetteD2_C12.setVelocity(0);
+            }
+        }
+        if (this.crevetteD2_C13.vivant == true) {
+            const distance = Phaser.Math.Distance.Between(this.crevetteD2_C13.x, this.crevetteD2_C13.y, this.player.x, this.player.y);
+            if (distance < 300) {
+                this.crevetteD2_C13.setVelocity(this.player.x - this.crevetteD2_C13.x, this.player.y - this.crevetteD2_C13.y);
+            } else {
+                this.crevetteD2_C13.setVelocity(0);
+            }
+        }
+        if (this.crevetteD2_C14.vivant == true) {
+            const distance = Phaser.Math.Distance.Between(this.crevetteD2_C14.x, this.crevetteD2_C14.y, this.player.x, this.player.y);
+            if (distance < 300) {
+                this.crevetteD2_C14.setVelocity(this.player.x - this.crevetteD2_C14.x, this.player.y - this.crevetteD2_C14.y);
+            } else {
+                this.crevetteD2_C14.setVelocity(0);
+            }
+        }
+        if (this.crevetteD2_C15.vivant == true) {
+            const distance = Phaser.Math.Distance.Between(this.crevetteD2_C15.x, this.crevetteD2_C15.y, this.player.x, this.player.y);
+            if (distance < 300) {
+                this.crevetteD2_C15.setVelocity(this.player.x - this.crevetteD2_C15.x, this.player.y - this.crevetteD2_C15.y);
+            } else {
+                this.crevetteD2_C15.setVelocity(0);
+            }
+        }
+        if (this.crevetteD2_C16.vivant == true) {
+            const distance = Phaser.Math.Distance.Between(this.crevetteD2_C16.x, this.crevetteD2_C16.y, this.player.x, this.player.y);
+            if (distance < 300) {
+                this.crevetteD2_C16.setVelocity(this.player.x - this.crevetteD2_C16.x, this.player.y - this.crevetteD2_C16.y);
+            } else {
+                this.crevetteD2_C16.setVelocity(0);
+            }
+        }
+        if (this.crevetteD2_C17.vivant == true) {
+            const distance = Phaser.Math.Distance.Between(this.crevetteD2_C17.x, this.crevetteD2_C17.y, this.player.x, this.player.y);
+            if (distance < 300) {
+                this.crevetteD2_C17.setVelocity(this.player.x - this.crevetteD2_C17.x, this.player.y - this.crevetteD2_C17.y);
+            } else {
+                this.crevetteD2_C17.setVelocity(0);
+            }
+        }
 
 
 
@@ -3227,6 +3371,8 @@ class donjon2 extends Phaser.Scene {
             requin.soin.y = requin.y
 
         }
+        requin.vivant = false
+
         requin.destroy();
 
     }
