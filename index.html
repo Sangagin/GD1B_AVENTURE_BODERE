@@ -35,6 +35,7 @@
                 console.log('init', data);
         
                 this.mort = data.etat;
+                this.victoire = data.victoire
             }
 
             preload() {
@@ -71,7 +72,13 @@
                 //this.player = this.physics.add.sprite(900, 4000, 'perso');
 
 
-                if (!this.mort) {
+                if(this.victoire){
+                    this.fond = this.add.image(640, 720 / 2, 'fondVictoire');
+                    this.fond.setScale(0.3)
+                }
+
+
+                else if (!this.mort) {
                 this.fond = this.add.image(640, 720 / 2, 'fondmenu');
                 this.fond.setScale(0.3)
                 
@@ -90,6 +97,8 @@
                                         });
 
                 }
+
+
 
                 //sinon c'est que c'est un game over
                 else{

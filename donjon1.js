@@ -45,6 +45,9 @@ class donjon1 extends Phaser.Scene {
                 { frameWidth: 576, frameHeight: 320 });
         }
 
+        this.load.spritesheet('UI2', 'assets/UI/UI_2.png',
+        { frameWidth: 576, frameHeight: 320 });
+
         //sprites courants
         this.load.spritesheet('courrant', 'assets/sprites/courrant.png',
             { frameWidth: 64, frameHeight: 64 });
@@ -1288,6 +1291,161 @@ class donjon1 extends Phaser.Scene {
 
 
             }
+            {
+
+                this.anims.create({
+                    key: ' UI2max2actuel1',
+                    frames: [{ key: 'UI2', frame: 2 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max2actuel2',
+                    frames: [{ key: 'UI2', frame: 3 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max4actuel1',
+                    frames: [{ key: 'UI2', frame: 4 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max4actuel2',
+                    frames: [{ key: 'UI2', frame: 5 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max4actuel3',
+                    frames: [{ key: 'UI2', frame: 6 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max4actuel4',
+                    frames: [{ key: 'UI2', frame: 7 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max6actuel1',
+                    frames: [{ key: 'UI2', frame: 8 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max6actuel2',
+                    frames: [{ key: 'UI2', frame: 9 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max6actuel3',
+                    frames: [{ key: 'UI2', frame: 10 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max6actuel4',
+                    frames: [{ key: 'UI2', frame: 11 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max6actuel5',
+                    frames: [{ key: 'UI2', frame: 12 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max6actuel6',
+                    frames: [{ key: 'UI2', frame: 13 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max8actuel1',
+                    frames: [{ key: 'UI2', frame: 14 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max8actuel2',
+                    frames: [{ key: 'UI2', frame: 15 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max8actuel3',
+                    frames: [{ key: 'UI2', frame: 16 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max8actuel4',
+                    frames: [{ key: 'UI2', frame: 17 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max8actuel5',
+                    frames: [{ key: 'UI2', frame: 18 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max8actuel6',
+                    frames: [{ key: 'UI2', frame: 19 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max8actuel7',
+                    frames: [{ key: 'UI2', frame: 20 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max8actuel8',
+                    frames: [{ key: 'UI2', frame: 21 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max10actuel1',
+                    frames: [{ key: 'UI2', frame: 22 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max10actuel2',
+                    frames: [{ key: 'UI2', frame: 23 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max10actuel3',
+                    frames: [{ key: 'UI2', frame: 24 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max10actuel4',
+                    frames: [{ key: 'UI2', frame: 25 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max10actuel5',
+                    frames: [{ key: 'UI2', frame: 26 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max10actuel6',
+                    frames: [{ key: 'UI2', frame: 27 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max10actuel7',
+                    frames: [{ key: 'UI2', frame: 28 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max10actuel8',
+                    frames: [{ key: 'UI2', frame: 29 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max10actuel9',
+                    frames: [{ key: 'UI2', frame: 30 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: ' UI2max10actuel10',
+                    frames: [{ key: 'UI2', frame: 31 }],
+                    frameRate: 20
+                });
+
+
+            }
 
         }
 
@@ -2365,6 +2523,7 @@ class donjon1 extends Phaser.Scene {
         }
 
         //gestion UI
+        if (this.powerup2==false){
         {
             if (this.vieMax == 2 && this.vieActuelle == 1) {
                 this.ui.anims.play(' UI1max2actuel1', true);
@@ -2490,7 +2649,137 @@ class donjon1 extends Phaser.Scene {
 
 
         }
+    }
+    else {
+        {
+            if (this.vieMax == 2 && this.vieActuelle == 1) {
+                this.ui.anims.play(' UI2max2actuel1', true);
 
+            }
+            else if (this.vieMax == 2 && this.vieActuelle == 2) {
+                this.ui.anims.play(' UI2max2actuel2', true);
+
+            }
+            else if (this.vieMax == 4 && this.vieActuelle == 1) {
+                this.ui.anims.play(' UI2max4actuel1', true);
+
+            }
+            else if (this.vieMax == 4 && this.vieActuelle == 2) {
+                this.ui.anims.play(' UI2max4actuel2', true);
+
+            }
+            else if (this.vieMax == 4 && this.vieActuelle == 3) {
+                this.ui.anims.play(' UI2max4actuel3', true);
+
+            }
+            else if (this.vieMax == 4 && this.vieActuelle == 4) {
+                this.ui.anims.play(' UI2max4actuel4', true);
+
+            }
+            else if (this.vieMax == 6 && this.vieActuelle == 1) {
+                this.ui.anims.play(' UI2max6actuel1', true);
+
+            }
+            else if (this.vieMax == 6 && this.vieActuelle == 2) {
+                this.ui.anims.play(' UI2max6actuel2', true);
+
+            }
+            else if (this.vieMax == 6 && this.vieActuelle == 3) {
+                this.ui.anims.play(' UI2max6actuel3', true);
+
+            }
+            else if (this.vieMax == 6 && this.vieActuelle == 4) {
+                this.ui.anims.play(' UI2max6actuel4', true);
+
+            }
+            else if (this.vieMax == 6 && this.vieActuelle == 5) {
+                this.ui.anims.play(' UI2max6actuel5', true);
+
+            }
+            else if (this.vieMax == 6 && this.vieActuelle == 6) {
+                this.ui.anims.play(' UI2max6actuel6', true);
+
+            }
+            else if (this.vieMax == 8 && this.vieActuelle == 1) {
+                this.ui.anims.play(' UI2max8actuel1', true);
+
+            }
+            else if (this.vieMax == 8 && this.vieActuelle == 2) {
+                this.ui.anims.play(' UI2max8actuel2', true);
+
+            }
+            else if (this.vieMax == 8 && this.vieActuelle == 3) {
+                this.ui.anims.play(' UI2max8actuel3', true);
+
+            }
+            else if (this.vieMax == 8 && this.vieActuelle == 4) {
+                this.ui.anims.play(' UI2max8actuel4', true);
+
+            }
+            else if (this.vieMax == 8 && this.vieActuelle == 5) {
+                this.ui.anims.play(' UI2max8actuel5', true);
+
+            }
+            else if (this.vieMax == 8 && this.vieActuelle == 6) {
+                this.ui.anims.play(' UI2max8actuel6', true);
+
+            }
+            else if (this.vieMax == 8 && this.vieActuelle == 7) {
+                this.ui.anims.play(' UI2max8actuel7', true);
+
+            }
+            else if (this.vieMax == 8 && this.vieActuelle == 8) {
+                this.ui.anims.play(' UI2max8actuel8', true);
+
+            }
+            else if (this.vieMax == 10 && this.vieActuelle == 1) {
+                this.ui.anims.play(' UI2max10actuel1', true);
+
+            }
+            else if (this.vieMax == 10 && this.vieActuelle == 2) {
+                this.ui.anims.play(' UI2max10actuel2', true);
+
+            }
+            else if (this.vieMax == 10 && this.vieActuelle == 3) {
+                this.ui.anims.play(' UI2max10actuel3', true);
+
+            }
+            else if (this.vieMax == 10 && this.vieActuelle == 4) {
+                this.ui.anims.play(' UI2max10actuel4', true);
+
+            }
+            else if (this.vieMax == 10 && this.vieActuelle == 5) {
+                this.ui.anims.play(' UI2max10actuel5', true);
+
+            }
+            else if (this.vieMax == 10 && this.vieActuelle == 6) {
+                this.ui.anims.play(' UI2max10actuel6', true);
+
+            }
+            else if (this.vieMax == 10 && this.vieActuelle == 7) {
+                this.ui.anims.play(' UI2max10actuel7', true);
+
+            }
+            else if (this.vieMax == 10 && this.vieActuelle == 8) {
+                this.ui.anims.play(' UI2max10actuel8', true);
+
+            }
+            else if (this.vieMax == 10 && this.vieActuelle == 9) {
+                this.ui.anims.play(' UI2max10actuel9', true);
+
+            }
+            else if (this.vieMax == 10 && this.vieActuelle == 10) {
+                this.ui.anims.play(' UI2max10actuel10', true);
+
+            }
+
+
+
+        }
+
+
+
+    }
 
     }
 

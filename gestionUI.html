@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Mathieu</title>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js">
+    </script>
+    <style type="text/css">
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+
+
+<body>
+    <!--script src="Aventure.js"></script-->
+    <script type="text/javascript">
+
+
+
+
+        class intro extends Phaser.scene {
+            constructor() {
+                super({ key: 'intro' });
+
+            }
+
+            preload() {
+                this.load.image('écran titre.png');
+
+            }
+            create() {
+                this.add.image('800, 800, écran titre');
+                const button = this.add.image(400, 300, 'button');
+                button.on('pointerdowm', () => {
+                    this.scene.start('scene1');
+                    this.add.text(400, 300, 'Press spacebar to continue', { font: '32px Arial', fill: '#fff' });
+                    this.input.keyboard.on('keydown-SPACE', () => {
+                        // Démarrer la scène suivante
+                        this.scene.start('scene1')
+                    });
+                });
+
+            }
+            update() {
+
+
+            }
+        }
+
+        class scene1 extends Phaser.scene {
+            constructor() {
+                super({ key: 'scene1' })
+            }
+
+            preload() {
+                this.load.image('Scene1.png');
+                this.load.tilemapTiledJSON('scene1.JSON');
+
+            }
+
+            create() {
+                const maison = this.add.tilemap("scene1")
+
+                const tileset = carteDuNiveau.addTilesetImage(
+                    "scene1",
+                    "scene1"
+                );
+
+                const Background = carteDuNiveau.createLayer(
+                    "Background",
+                    tileset
+                );
+
+                const objet = carteDuNiveau.createLayer(
+                    "objet",
+                    tileset
+                );
+
+                const epee = carteDuNiveau.createLayer(
+                    "epee",
+                    tileset
+                );
+
+                objet.setCollisionByProperty({ EstSolide: true });
+                epee.setCollisionByProperty({ EstSolide: true });
+
+
+
+
+            }
+
+            update() {
+                if ((this.player.x > 6 && this.player.x < 14) && (this.player.y > 7 && this.player.y < 14)) {
+                    scene2
+                }
+
+
+
+
+            }
+        }
+
+        class monde extends Phaser.Scene {
+            constructor() {
+                super({ key: 'monde' });
+            }
+
+            preload() {
+
+                this.load.spritesheet('perso', 'assets/hero.png',// ajout du personnage
+                    { frameWidth: 32, frameHeight: 32 });
+
+                this.load.spritesheet('ennemis', 'scorpion.png',
+                    { frameWidth: 100, frameHeight: 180 });
+
+                this.load.image('Sprite-0001', 'assets/Sprite-0001.png');// ajout du tileset
+
+                this.load.tilemapTiledJSON("carte", "assets/zeldalike_04.json");   // ajout de la carte
+
+                this.load.image('deathworms', 'assets/deathworms-export.png',
+                    { frameWidth: 365, frameHeight: 531 });
+
+                this.load.spritesheet('épée', 'assets/epée.png',
+                    { frameWidth: 32, frameHeight: 32 });
+
+            }
+
+
+            gameOver = false;
+            sens = 1;
+
+            create() {
+
+                const carteDuNiveau = this.add.tilemap("carte");
+
+                const tileset = carteDuNiveau.addTilesetImage(
+                    "Sprite-0001",
+                    "Sprite-0001"
+                );
+
+                const Background = carteDuNiveau.createLayer(
+                    "Background",
+                    tileset
+                );
+
+                const entre_deux_test = carteDuNiveau.createLayer(
+                    "entre_deux_test",
+                    tileset
+                );
+
+                const Végétation_et_décors = carteDuNiveau.createLayer(
+                    "Végétation_et_décors",
+                    tileset
+                );
+
+                entre_deux_test.setCollisionByProperty({ EstSolide: true });
+                Végétation_et_décors.setCollisionByProperty({ EstSolide: true });
+
+
+                player = this.physics.add.sprite(1750, 1650, 'perso');
+                player.setCollideWorldBounds(false);
+
+                épée = this.add.sprite(0, 0, 'épée');
+                épée.setPosition(player.x + 20, player.y + 10);
+                //épée.setParent(player);
+                épée.setDepth(player.depth + 1);
+
+                this.physics.add.collider(player, entre_deux_test);
+                this.physics.add.collider(player, Végétation_et_décors);
+
+                this.ennemy = this.physics.add.group()
+
+                ennemis1 = this.ennemy.create(1720, 1720, 'ennemis');
+
+                ennemis2 = this.physics.add.sprite(3150, 2320, 'ennemis');
+
+                ennemis3 = this.physics.add.sprite(3775, 2320, 'ennemis');
+
+                ennemis4 = this.physics.add.sprite(4500, 2220, 'ennemis');
+
+                ennemis5 = this.physics.add.sprite(3250, 1700, 'ennemis');
+
+                ennemis6 = this.physics.add.sprite(4900, 1100, 'ennemis');
+
+                ennemis7 = this.physics.add.sprite(3000, 1000, 'ennemis');
+
+                ennemis8 = this.physics.add.sprite(3750, 950, 'ennemis');
+
+                ennemis9 = this.physics.add.sprite(3800, 600, 'ennemis');
+
+                ennemis10 = this.physics.add.sprite(4800, 2500, 'ennemis');
+
+                ennemis11 = this.physics.add.sprite(4500, 2050, 'ennemis');
+                // nord est des 6 troncs coucher
+                ennemis12 = this.physics.add.sprite(4250, 1700, 'ennemis');
+                // sud du labyrinthe
+                ennemis13 = this.physics.add.sprite(4300, 925, 'ennemis');
+                //sud ouest du chateau
+                ennemis14 = this.physics.add.sprite(4275, 575, 'ennemis');
+                // proche du chateau
+                ennemis = this.physics.add.sprite(4700, 625, 'ennemis');
+                //proche du chateau
+                deathworms = this.physics.add.image(4475, 1200, 'deathworms');
+                //deathworms.setscale( 0,1);
+                //ennemis.setscale(0.9);
+
+                this.physics.add.collider(ennemis, entre_deux_test);
+                this.physics.add.collider(ennemis, Végétation_et_décors);
+
+
+
+                // redimentionnement du monde avec les dimensions calculées via tiled
+                this.physics.world.setBounds(0, 0, 5500, 3220);
+                //  ajout du champs de la caméra de taille identique à celle du monde
+                this.cameras.main.setBounds(0, 0, 5500, 3220);
+                // ancrage de la caméra sur le joueur
+                this.cameras.main.startFollow(player);
+                // Zoom de la caméra
+                this.cameras.main.zoom = 1.5
+
+                this.anims.create({
+                    key: 'front',
+                    frames: this.anims.generateFrameNumbers('perso', { start: 0, end: 3 }),
+                    frameRate: 10,
+                    repeat: -1
+                });
+
+                this.anims.create({
+                    key: 'back',
+                    frames: this.anims.generateFrameNumbers('perso', { start: 12, end: 1 }),
+                    frameRate: 10,
+                    repeat: -1
+                });
+
+
+                this.anims.create({
+                    key: 'left',
+                    frames: this.anims.generateFrameNumbers('perso', { start: 8, end: 11 }),
+                    frameRate: 10,
+                    repeat: -1
+                });
+                this.anims.create({
+                    key: 'turn',
+                    frames: [{ key: 'perso', frame: 3 }],
+                    frameRate: 20
+                });
+                this.anims.create({
+                    key: 'right',
+                    frames: this.anims.generateFrameNumbers('perso', { start: 4, end: 7 }),
+                    frameRate: 10,
+                    repeat: -1
+                });
+                // copier ce qu'il y'a au dessus mais pour le scorpion
+
+                cursors = this.input.keyboard.createCursorKeys();
+
+
+                this.anims.create({
+                    duration: 1000,
+                    key: 'frontscorpion',
+                    frames: this.anims.generateFrameNumbers('scorpion', { start: 0, end: 1 }),
+                    frameRate: 2,
+                    repeat: -1
+                    //
+                })
+                this.anims.create({
+                    key: 'backscorpion',
+                    frames: this.anims.generateFrameNumbers('scorpion', { start: 2, end: 3 }),
+                    frameRate: 2,
+                    repeat: -1
+                    //
+                })
+                this.anims.create({
+                    key: 'rightscorpion',
+                    frames: this.anims.generateFrameNumbers('scorpion', { start: 4, end: 5 }),
+                    frameRate: 2,
+                    repeat: -1
+                })
+
+                this.anims.create({
+                    key: 'leftscorpion',
+                    frames: this.anims.generateFrameNumbers('scorpion', { start: 6, end: 7 }),
+                    frameRate: 2,
+                    repeat: -1
+                    //
+
+
+                    //
+                })
+                //this.anims.create({
+                //    key: 'turnscorpion',
+                //    frames: [{ key: 'scorpion', frame: 5 }],
+                //    frameRate: 20
+                //})
+
+
+
+            }
+
+            canMove = true
+            update() {
+
+                this.epee.x = this.perso.x + 20
+                this.epee.y = this.perso.y
+
+
+
+
+                if (gameOver) { return; }
+
+                if (cursors.left.isDown) { //si la touche gauche est appuyée
+                    player.setVelocityX(-160); //alors vitesse négative en X
+                    player.anims.play('left', true); //et animation => gauche
+                }
+                else if (cursors.right.isDown) { //sinon si la touche droite est appuyée
+                    player.setVelocityX(160); //alors vitesse positive en X
+                    player.anims.play('right', true); //et animation => droite
+
+
+                }
+                else {
+                    player.setVelocityX(0);
+                }
+
+                if (cursors.down.isDown) { //descendre plus vite
+                    player.setVelocityY(160);
+                    player.anims.play('front')
+                }
+                else if (cursors.up.isDown) { //descendre plus vite
+                    player.setVelocityY(-160);
+                    player.anims.play('back')
+                }
+                else { // sinon
+                    //vitesse nulle
+                    player.setVelocityY(0)
+                    player.anims.play('turn'); //animation fait face caméra
+                }
+
+                //copier ce qu'il y'a au dessus mais pour le scorpion
+
+                //déplacement ennemis
+                var distance = Phaser.Math.Distance.Between(ennemis1.x, ennemis1.y, player.x, player.y);
+                if (distance < 175) {
+                    ennemis1.setVelocityX(player.x - ennemis1.x)
+                    ennemis1.setVelocityY(player.y - ennemis1.y)
+                }
+                else { ennemis1.setVelocity(0) }
+                //
+                if (Math.abs(ennemis1.body.velocity.x) > Math.abs(ennemis1.body.velocity.y)) {
+                    if (ennemis1.body.velocity.x > 0) {
+                        console.log("droite")
+                        ennemis1.anims.play('right');
+                    }
+                    if (ennemis1.body.velocity.x < 0) {
+                        console.log("gauche")
+                        ennemis1.anims.play('left');
+                    }
+                }
+
+                else {
+
+                    if (ennemis1.body.velocity.y > 0) {
+                        console.log("front")
+                        ennemis1.anims.play('front');
+                    }
+
+                    if (ennemis1.body.velocity.y < 0) {
+                        console.log("back")
+                        ennemis1.anims.play('back', true);
+
+                    }
+                }
+
+            }
+
+            }
+            config = {
+                type: Phaser.AUTO,
+                width: 800, height: 800,
+
+                physics: {
+                    default: 'arcade',
+                    arcade: {
+                        debug: true
+                    }
+                },
+                input: { gamepad: true },
+
+                scene: [intro, scene1, scene2],
+
+            };
+        new Phaser.Game(config);
+
+
+
+
+
+    </script>
+</body>
+
+</html>
